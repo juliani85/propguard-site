@@ -5,22 +5,23 @@
 <meta name="description" content="Todas las reglas de FundingPips explicadas claro: daily loss 5%, drawdown 10%, consistencia, quick strike y noticias. Calculadora gratis de cuánto podés perder antes de romper la cuenta.">
 <link rel="canonical" href="https://trypropguard.com/reglas/fundingpips.html">
 <meta name="robots" content="index,follow">
+<link rel="alternate" hreflang="es" href="https://trypropguard.com/reglas/fundingpips.html"><link rel="alternate" hreflang="en" href="https://trypropguard.com/en/rules/fundingpips.html"><link rel="alternate" hreflang="x-default" href="https://trypropguard.com/reglas/fundingpips.html">
 <meta property="og:type" content="article"><meta property="og:title" content="Reglas de FundingPips 2026: daily loss, drawdown y consistencia (con calculadora)">
 <meta property="og:description" content="Todas las reglas de FundingPips explicadas claro: daily loss 5%, drawdown 10%, consistencia, quick strike y noticias. Calculadora gratis de cuánto podés perder antes de romper la cuenta."><meta property="og:url" content="https://trypropguard.com/reglas/fundingpips.html">
-<meta property="og:site_name" content="PropGuard">
+<meta property="og:site_name" content="PropGuard"><meta property="og:locale" content="es_AR">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Reglas de FundingPips 2026: daily loss, drawdown y consistencia (con calculadora)"><meta name="twitter:description" content="Todas las reglas de FundingPips explicadas claro: daily loss 5%, drawdown 10%, consistencia, quick strike y noticias. Calculadora gratis de cuánto podés perder antes de romper la cuenta.">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;700;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/css/seo.css">
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Reglas de FundingPips 2026: daily loss, drawdown y consistencia (con calculadora)", "about": "FundingPips prop firm rules", "publisher": {"@type": "Organization", "name": "PropGuard", "url": "https://trypropguard.com"}}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Reglas de FundingPips 2026: daily loss, drawdown y consistencia (con calculadora)", "inLanguage": "es", "publisher": {"@type": "Organization", "name": "PropGuard", "url": "https://trypropguard.com"}}</script>
 </head><body>
 <div class="tape"></div>
 <nav>
   <div class="logo"><a href="/" style="color:inherit">PROP<b>GUARD</b></a></div>
   <div class="navlinks">
     <a href="/reglas/">Reglas</a><a href="/blog/">Blog</a>
-    <a href="/compare.html">Comparador</a><a href="/calc.html">Calculadora</a>
-    <a href="/#precio">Precio</a>
+    <a href="/compare.html">Comparador</a><a href="/#precio">Precio</a>
+    <a class="lang" href="/en/">EN</a>
   </div>
 </nav>
 <div class="wrap"><article>
@@ -45,20 +46,14 @@
 </div></div>
 <script>
 var SZ=[5000, 10000, 25000, 50000, 100000, 200000],DLP=0.05,MLP=0.1;
-var s=document.getElementById('sz');
-SZ.forEach(function(v){var o=document.createElement('option');o.value=v;o.textContent='$'+v.toLocaleString('en-US');s.appendChild(o)});
-function f(n){return '$'+Math.round(n).toLocaleString('en-US')}
-function upd(){var v=+s.value;document.getElementById('dl').textContent=f(v*DLP);document.getElementById('ml').textContent=f(v*MLP)}
+var sel=document.getElementById('sz');
+SZ.forEach(function(v){var o=document.createElement('option');o.value=v;o.textContent='$'+v.toLocaleString('en-US');sel.appendChild(o)});
+function fmt(n){return '$'+Math.round(n).toLocaleString('en-US')}
+function upd(){var v=+sel.value;document.getElementById('dl').textContent=fmt(v*DLP);document.getElementById('ml').textContent=fmt(v*MLP)}
 upd();
 </script>
 
-<h2>Daily loss: la regla que más cuentas mata</h2>
-<p>FundingPips te deja perder hasta <strong>5%</strong> en un solo día.
-Si tu equity (flotante incluido) toca ese piso, la cuenta se rompe — no importa que después recupere.
-Es el límite que silenciosamente liquida más cuentas, porque un solo trade grande o una racha en un mal día alcanza.</p><h2>Drawdown máximo (10% estático)</h2>
-<p>El tope total de pérdida de FundingPips es <strong>10%</strong>. Al ser <strong>estático</strong>, el piso no sube cuando ganás: siempre se mide contra el balance inicial. Eso es bueno — te da aire a medida que crecés.</p><h2>Consistencia</h2><p>En el programa flagship de FundingPips, la consistencia <strong>no bloquea la evaluación</strong>. SIN consistency en evaluación (mi v0.2 decía 30%, era incorrecto). La regla 35% aplica SOLO al payout On-Demand (split 90%); los ciclos Weekly/Bi-Weekly/Monthly NO la tienen.</p><h2>Ventana de noticias</h2>
-<p>FundingPips restringe operar alrededor de noticias de alto impacto: ventana de ±10 min.
-Prohibido abrir/cerrar DELIBERADAMENTE alrededor de noticias high-impact (cierre de cuenta). Holding a través está permitido. Trades abiertos 5h+ antes del evento son válidos aunque cierren en la ventana de 10 min.</p><h2>Estrategias prohibidas</h2><ul><li>news gambling deliberado</li><li>hedging entre cuentas</li><li>HFT</li><li>arbitraje</li></ul>
+<h2>Daily loss: la regla que más cuentas mata</h2><p>FundingPips te deja perder hasta <strong>5%</strong> en un solo día. Si tu equity (flotante incluido) toca ese piso, la cuenta se rompe — no importa que después recupere. Es el límite que silenciosamente liquida más cuentas, porque un solo trade grande o una racha en un mal día alcanza.</p><h2>Drawdown máximo (10% estático)</h2><p>El tope total de pérdida de FundingPips es <strong>10%</strong>. Al ser <strong>estático</strong>, el piso no sube cuando ganás: siempre se mide contra el balance inicial. Eso es bueno — te da aire a medida que crecés.</p><h2>Consistencia</h2><p>En el programa flagship de FundingPips, la consistencia <strong>no bloquea la evaluación</strong>. SIN consistency en evaluación (mi v0.2 decía 30%, era incorrecto). La regla 35% aplica SOLO al payout On-Demand (split 90%); los ciclos Weekly/Bi-Weekly/Monthly NO la tienen.</p><h2>Ventana de noticias</h2><p>FundingPips restringe operar alrededor de noticias de alto impacto: ventana de ±10 min. Prohibido abrir/cerrar DELIBERADAMENTE alrededor de noticias high-impact (cierre de cuenta). Holding a través está permitido. Trades abiertos 5h+ antes del evento son válidos aunque cierren en la ventana de 10 min.</p><h2>Estrategias prohibidas</h2><ul><li>news gambling deliberado</li><li>hedging entre cuentas</li><li>HFT</li><li>arbitraje</li></ul>
 
 <div class="card lime">
 <div class="kicker">No te prometo ganar</div>
@@ -69,19 +64,14 @@ acercás al borde, <strong>cierra o bloquea automáticamente</strong> — antes 
 <a class="cta" href="/#precio">Ver planes (desde 19 USDT) →</a>
 </div>
 
-<h2>Preguntas frecuentes sobre las reglas de FundingPips</h2><details><summary>¿Cuál es el daily loss de FundingPips?</summary><p>El límite de pérdida diaria de FundingPips es del 5% del balance/equity. Si lo superás en un día, perdés la cuenta.</p></details><details><summary>¿Cuál es el drawdown máximo de FundingPips?</summary><p>El drawdown máximo de FundingPips es del 10% (estático). </p></details><details><summary>¿FundingPips tiene regla de consistencia?</summary><p>En su programa flagship, no en la evaluación. SIN consistency en evaluación (mi v0.2 decía 30%, era incorrecto). La regla 35% aplica SOLO al payout On-Demand (split 90%); los ciclos Weekly/Bi-Weekly/Monthly NO la tienen.</p></details><details><summary>¿PropGuard funciona con FundingPips?</summary><p>Sí. PropGuard corre con tu estrategia en FundingPips y te frena automáticamente antes de romper el daily loss, el drawdown y las demás reglas. Soporta MT4 y MT5.</p></details>
+<h2>Preguntas frecuentes sobre las reglas de FundingPips</h2><details><summary>¿Cuál es el daily loss de FundingPips?</summary><p>El límite de pérdida diaria de FundingPips es del 5% del balance/equity. Si lo superás en un día, perdés la cuenta.</p></details><details><summary>¿Cuál es el drawdown máximo de FundingPips?</summary><p>El drawdown máximo de FundingPips es del 10% (estático).</p></details><details><summary>¿FundingPips tiene regla de consistencia?</summary><p>En su programa flagship, no en la evaluación. SIN consistency en evaluación (mi v0.2 decía 30%, era incorrecto). La regla 35% aplica SOLO al payout On-Demand (split 90%); los ciclos Weekly/Bi-Weekly/Monthly NO la tienen.</p></details><details><summary>¿PropGuard funciona con FundingPips?</summary><p>Sí. PropGuard corre con tu estrategia en FundingPips y te frena automáticamente antes de romper el daily loss, el drawdown y las demás reglas. Soporta MT4 y MT5.</p></details>
 
 <div class="quote">No te prometo ganar — te aseguro <span>no morir por un tecnicismo.</span></div>
-<p>Mirá también: <a href="/reglas/">todas las firmas</a> · <a href="/compare.html">comparador</a> ·
-<a href="/blog/reglas-que-mas-matan-cuentas.html">las 5 reglas que más matan cuentas</a>.</p>
+<p>Mirá también: <a href='/reglas/'>todas las firmas</a> · <a href='/compare.html'>comparador</a>.</p>
 
-<p class="disc">Valores de research (may-2026) de fuentes públicas y help centers oficiales. Cada firma tiene
-varios programas con valores distintos; acá se modela el flagship. Confirmá contra el ToS del producto exacto
-antes de operar. PropGuard no está afiliado a FundingPips.</p>
+<p class="disc">Valores de research (may-2026) de fuentes públicas y help centers oficiales. Cada firma tiene varios programas con valores distintos; acá se modela el flagship. Confirmá contra el ToS del producto exacto antes de operar. PropGuard no está afiliado a FundingPips.</p>
 </article></div>
-<footer><div class="wrap">
-PROPGUARD · hecho por un trader, para traders.<br>
-// reglas orientativas — el cumplimiento oficial lo define cada firma y su ToS. No afiliado a ninguna prop firm.<br>
-<a href="/">Inicio</a> · <a href="/reglas/">Reglas por firma</a> · <a href="/blog/">Blog</a> · <a href="/compare.html">Comparador</a>
+<footer><div class="wrap">PROPGUARD · hecho por un trader, para traders.<br>// reglas orientativas — el cumplimiento oficial lo define cada firma y su ToS. No afiliado a ninguna prop firm.<br>
+<a href="/">Inicio</a> · <a href="/reglas/">Reglas</a> · <a href="/blog/">Blog</a> · <a href="/compare.html">Comparador</a>
 </div></footer>
 <div class="tape"></div></body></html>
