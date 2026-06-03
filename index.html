@@ -119,6 +119,18 @@
 
   footer { border-top:1px solid var(--line); padding:2.5rem 0; color:var(--dim); font-size:.82rem; font-family:var(--mono); line-height:1.8; }
 
+  /* modal de compra */
+  .modal-bg { position:fixed; inset:0; background:rgba(0,0,0,.7); display:none; align-items:center; justify-content:center; z-index:50; padding:1rem; }
+  .modal-bg.show { display:flex; }
+  .modal { background:var(--card); border:1px solid var(--lime); border-radius:16px; padding:1.8rem; max-width:24rem; width:100%; text-align:center; }
+  .modal .k { font-family:var(--mono); font-size:.72rem; color:var(--lime); letter-spacing:.1em; text-transform:uppercase; }
+  .modal h3 { font-size:1.4rem; font-weight:800; margin:.4rem 0 .2rem; }
+  .modal p { color:var(--dim); font-size:.9rem; margin-bottom:1.1rem; }
+  .modal input { width:100%; padding:.85rem 1rem; background:var(--ink); border:1px solid var(--line); border-radius:10px; color:var(--txt); font-family:var(--mono); margin-bottom:.8rem; }
+  .modal .row2 { display:flex; gap:.5rem; }
+  .modal .row2 .btn { flex:1; }
+  .modal .cancel { background:transparent; color:var(--dim); border:1px solid var(--line); }
+
   @media (max-width:760px){
     .hero{grid-template-columns:1fr; gap:1.8rem;}
     h1{font-size:2.4rem;}
@@ -278,6 +290,21 @@
 </footer>
 <div class="tape"></div>
 
+<!-- Modal de compra -->
+<div class="modal-bg" id="buy-modal">
+  <div class="modal">
+    <div class="k">// checkout</div>
+    <h3 id="buy-title">Guardian · 19 USDT/mes</h3>
+    <p>Dejá tu email — ahí te llega la <strong style="color:var(--txt)">license key</strong> apenas se confirma el pago.</p>
+    <input type="email" id="buy-email" placeholder="tu@email.com" autocomplete="email">
+    <div class="row2">
+      <button class="btn cancel" onclick="closeBuy()">Cancelar</button>
+      <button class="btn btn-lime" onclick="goPay()">Ir a pagar →</button>
+    </div>
+    <p style="font-size:.75rem;margin-top:.9rem;margin-bottom:0">Pago en USDT vía NOWPayments. Sin tarjeta.</p>
+  </div>
+</div>
+
 <script>
 (async function(){
   try {
@@ -294,13 +321,24 @@ document.getElementById('wl-form').addEventListener('submit', e => {
   document.getElementById('wl-ok').hidden=false;
 });
 
-// Compra: pide el mail y redirige al checkout de Binance Pay (server emite la key al pagar)
+// Compra: modal para el mail -> redirige al checkout (server emite la key al pagar)
 const PG_SERVER = "https://propguard-server.onrender.com";
+const PLAN_LABEL = { guardian:"Guardian · 19 USDT/mes", pro:"Pro · 39 USDT/mes", unlimited:"Unlimited · 79 USDT/mes" };
+let _plan = "guardian";
 function buy(plan){
-  const email = prompt("Tu email (ahí te llega la license key al pagar):");
-  if(!email || email.indexOf('@')<0) return;
-  window.location.href = `${PG_SERVER}/checkout?plan=${plan}&email=${encodeURIComponent(email)}`;
+  _plan = plan;
+  document.getElementById('buy-title').textContent = PLAN_LABEL[plan] || "PropGuard";
+  document.getElementById('buy-modal').classList.add('show');
+  setTimeout(()=>document.getElementById('buy-email').focus(), 50);
 }
+function closeBuy(){ document.getElementById('buy-modal').classList.remove('show'); }
+function goPay(){
+  const email = document.getElementById('buy-email').value.trim();
+  if(email.indexOf('@')<1){ document.getElementById('buy-email').focus(); return; }
+  window.location.href = `${PG_SERVER}/checkout?plan=${_plan}&email=${encodeURIComponent(email)}`;
+}
+document.getElementById('buy-modal').addEventListener('click', e=>{ if(e.target.id==='buy-modal') closeBuy(); });
+document.getElementById('buy-email').addEventListener('keydown', e=>{ if(e.key==='Enter') goPay(); });
 </script>
 </body>
 </html>
