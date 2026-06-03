@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="es"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Reglas de FTUK 2026: daily loss, drawdown y consistencia (con calculadora)</title>
+<meta name="description" content="Todas las reglas de FTUK explicadas claro: daily loss 4%, drawdown 8%, consistencia, quick strike y noticias. Calculadora gratis de cuánto podés perder antes de romper la cuenta.">
+<link rel="canonical" href="https://trypropguard.com/reglas/ftuk.html">
+<meta name="robots" content="index,follow">
+<meta property="og:type" content="article"><meta property="og:title" content="Reglas de FTUK 2026: daily loss, drawdown y consistencia (con calculadora)">
+<meta property="og:description" content="Todas las reglas de FTUK explicadas claro: daily loss 4%, drawdown 8%, consistencia, quick strike y noticias. Calculadora gratis de cuánto podés perder antes de romper la cuenta."><meta property="og:url" content="https://trypropguard.com/reglas/ftuk.html">
+<meta property="og:site_name" content="PropGuard">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Reglas de FTUK 2026: daily loss, drawdown y consistencia (con calculadora)"><meta name="twitter:description" content="Todas las reglas de FTUK explicadas claro: daily loss 4%, drawdown 8%, consistencia, quick strike y noticias. Calculadora gratis de cuánto podés perder antes de romper la cuenta.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;700;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/seo.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Reglas de FTUK 2026: daily loss, drawdown y consistencia (con calculadora)", "about": "FTUK prop firm rules", "publisher": {"@type": "Organization", "name": "PropGuard", "url": "https://trypropguard.com"}}</script>
+</head><body>
+<div class="tape"></div>
+<nav>
+  <div class="logo"><a href="/" style="color:inherit">PROP<b>GUARD</b></a></div>
+  <div class="navlinks">
+    <a href="/reglas/">Reglas</a><a href="/blog/">Blog</a>
+    <a href="/compare.html">Comparador</a><a href="/calc.html">Calculadora</a>
+    <a href="/#precio">Precio</a>
+  </div>
+</nav>
+<div class="wrap"><article>
+<div class="crumb"><a href="/">Inicio</a> / <a href="/reglas/">Reglas</a> / FTUK</div>
+<span class="kicker">Reglas de prop firm · FTUK</span>
+<h1>Reglas de FTUK (2026), explicadas</h1>
+<p class="lead">FTUK destaca por su modelo 1-Step y opciones de instant funding. Ojo con la variante Instant: ahí el max drawdown es TRAILING, no estático.</p>
+<p><span class="tag warn">research — confirmá el ToS</span> <span class="tag">CFD / Forex</span></p>
+
+<h2>Límites de FTUK por tamaño de cuenta</h2>
+<p>Cuánto podés perder antes de romper, según el tamaño:</p>
+<table><thead><tr><th>Cuenta</th><th>Daily loss (4%)</th><th>Drawdown máx (8%)</th></tr></thead>
+<tbody><tr><td>$14,000</td><td>$560</td><td>$1,120</td></tr><tr><td>$28,000</td><td>$1,120</td><td>$2,240</td></tr><tr><td>$56,000</td><td>$2,240</td><td>$4,480</td></tr><tr><td>$87,000</td><td>$3,480</td><td>$6,960</td></tr><tr><td>$174,000</td><td>$6,960</td><td>$13,920</td></tr></tbody></table>
+
+<h3>Calculadora: ¿cuánto te queda antes de romper?</h3>
+<div class="card calc">
+<label for="sz">Tamaño de cuenta FTUK</label>
+<select id="sz" onchange="upd()"></select>
+<div class="out">
+<div class="o"><div class="l">Pérdida diaria máx.</div><div class="v a" id="dl">—</div></div>
+<div class="o"><div class="l">Drawdown máx. total</div><div class="v r" id="ml">—</div></div>
+</div></div>
+<script>
+var SZ=[14000, 28000, 56000, 87000, 174000],DLP=0.04,MLP=0.08;
+var s=document.getElementById('sz');
+SZ.forEach(function(v){var o=document.createElement('option');o.value=v;o.textContent='$'+v.toLocaleString('en-US');s.appendChild(o)});
+function f(n){return '$'+Math.round(n).toLocaleString('en-US')}
+function upd(){var v=+s.value;document.getElementById('dl').textContent=f(v*DLP);document.getElementById('ml').textContent=f(v*MLP)}
+upd();
+</script>
+
+<h2>Daily loss: la regla que más cuentas mata</h2>
+<p>FTUK te deja perder hasta <strong>4%</strong> en un solo día.
+Si tu equity (flotante incluido) toca ese piso, la cuenta se rompe — no importa que después recupere.
+Es el límite que silenciosamente liquida más cuentas, porque un solo trade grande o una racha en un mal día alcanza.</p><h2>Drawdown máximo (8% relative)</h2>
+<p>El tope total de pérdida de FTUK es <strong>8%</strong>. Al ser <strong>relativo/trailing</strong>, el piso te sigue hacia arriba: cuidado, porque te podés romper aunque estés en verde respecto del inicio.</p><h2>Consistencia</h2><p>En el programa flagship de FTUK, la consistencia <strong>no bloquea la evaluación</strong>. </p><h2>Ventana de noticias</h2>
+<p>FTUK restringe operar alrededor de noticias de alto impacto: ventana de ±5 min.
+Prohíbe trading ±5 min de noticias de alto impacto.</p><h2>Estrategias prohibidas</h2><ul><li>martingale</li><li>HFT</li><li>tick scalping (con EA/bot)</li></ul>
+
+<div class="card lime">
+<div class="kicker">No te prometo ganar</div>
+<h3 style="margin-top:.4rem">PropGuard te frena antes de romper estas reglas de FTUK</h3>
+<p>Cargás tu cuenta de FTUK, seguís operando con <strong>tu</strong> estrategia, y PropGuard
+vigila en vivo cada límite (daily loss, drawdown, consistencia, quick strike, noticias). Cuando te
+acercás al borde, <strong>cierra o bloquea automáticamente</strong> — antes de que el tecnicismo te mate la cuenta.</p>
+<a class="cta" href="/#precio">Ver planes (desde 19 USDT) →</a>
+</div>
+
+<h2>Preguntas frecuentes sobre las reglas de FTUK</h2><details><summary>¿Cuál es el daily loss de FTUK?</summary><p>El límite de pérdida diaria de FTUK es del 4% del balance/equity. Si lo superás en un día, perdés la cuenta.</p></details><details><summary>¿Cuál es el drawdown máximo de FTUK?</summary><p>El drawdown máximo de FTUK es del 8% (relative). </p></details><details><summary>¿FTUK tiene regla de consistencia?</summary><p>En su programa flagship, no en la evaluación. </p></details><details><summary>¿PropGuard funciona con FTUK?</summary><p>Sí. PropGuard corre con tu estrategia en FTUK y te frena automáticamente antes de romper el daily loss, el drawdown y las demás reglas. Soporta MT4 y MT5.</p></details>
+
+<div class="quote">No te prometo ganar — te aseguro <span>no morir por un tecnicismo.</span></div>
+<p>Mirá también: <a href="/reglas/">todas las firmas</a> · <a href="/compare.html">comparador</a> ·
+<a href="/blog/reglas-que-mas-matan-cuentas.html">las 5 reglas que más matan cuentas</a>.</p>
+
+<p class="disc">Valores de research (may-2026) de fuentes públicas y help centers oficiales. Cada firma tiene
+varios programas con valores distintos; acá se modela el flagship. Confirmá contra el ToS del producto exacto
+antes de operar. PropGuard no está afiliado a FTUK.</p>
+</article></div>
+<footer><div class="wrap">
+PROPGUARD · hecho por un trader, para traders.<br>
+// reglas orientativas — el cumplimiento oficial lo define cada firma y su ToS. No afiliado a ninguna prop firm.<br>
+<a href="/">Inicio</a> · <a href="/reglas/">Reglas por firma</a> · <a href="/blog/">Blog</a> · <a href="/compare.html">Comparador</a>
+</div></footer>
+<div class="tape"></div></body></html>

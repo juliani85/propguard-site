@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="es"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Reglas de Blue Guardian 2026: daily loss, drawdown y consistencia (con calculadora)</title>
+<meta name="description" content="Todas las reglas de Blue Guardian explicadas claro: daily loss 4%, drawdown 8%, consistencia, quick strike y noticias. Calculadora gratis de cuánto podés perder antes de romper la cuenta.">
+<link rel="canonical" href="https://trypropguard.com/reglas/blueguardian.html">
+<meta name="robots" content="index,follow">
+<meta property="og:type" content="article"><meta property="og:title" content="Reglas de Blue Guardian 2026: daily loss, drawdown y consistencia (con calculadora)">
+<meta property="og:description" content="Todas las reglas de Blue Guardian explicadas claro: daily loss 4%, drawdown 8%, consistencia, quick strike y noticias. Calculadora gratis de cuánto podés perder antes de romper la cuenta."><meta property="og:url" content="https://trypropguard.com/reglas/blueguardian.html">
+<meta property="og:site_name" content="PropGuard">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Reglas de Blue Guardian 2026: daily loss, drawdown y consistencia (con calculadora)"><meta name="twitter:description" content="Todas las reglas de Blue Guardian explicadas claro: daily loss 4%, drawdown 8%, consistencia, quick strike y noticias. Calculadora gratis de cuánto podés perder antes de romper la cuenta.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;700;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/seo.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Reglas de Blue Guardian 2026: daily loss, drawdown y consistencia (con calculadora)", "about": "Blue Guardian prop firm rules", "publisher": {"@type": "Organization", "name": "PropGuard", "url": "https://trypropguard.com"}}</script>
+</head><body>
+<div class="tape"></div>
+<nav>
+  <div class="logo"><a href="/" style="color:inherit">PROP<b>GUARD</b></a></div>
+  <div class="navlinks">
+    <a href="/reglas/">Reglas</a><a href="/blog/">Blog</a>
+    <a href="/compare.html">Comparador</a><a href="/calc.html">Calculadora</a>
+    <a href="/#precio">Precio</a>
+  </div>
+</nav>
+<div class="wrap"><article>
+<div class="crumb"><a href="/">Inicio</a> / <a href="/reglas/">Reglas</a> / Blue Guardian</div>
+<span class="kicker">Reglas de prop firm · Blue Guardian</span>
+<h1>Reglas de Blue Guardian (2026), explicadas</h1>
+<p class="lead">Blue Guardian tiene una consistency que NO termina la cuenta: seguís operando hasta que el promedio se equilibra. Drawdown del 8% estático.</p>
+<p><span class="tag warn">research — confirmá el ToS</span> <span class="tag">CFD / Forex</span></p>
+
+<h2>Límites de Blue Guardian por tamaño de cuenta</h2>
+<p>Cuánto podés perder antes de romper, según el tamaño:</p>
+<table><thead><tr><th>Cuenta</th><th>Daily loss (4%)</th><th>Drawdown máx (8%)</th></tr></thead>
+<tbody><tr><td>$5,000</td><td>$200</td><td>$400</td></tr><tr><td>$10,000</td><td>$400</td><td>$800</td></tr><tr><td>$25,000</td><td>$1,000</td><td>$2,000</td></tr><tr><td>$50,000</td><td>$2,000</td><td>$4,000</td></tr><tr><td>$100,000</td><td>$4,000</td><td>$8,000</td></tr><tr><td>$200,000</td><td>$8,000</td><td>$16,000</td></tr></tbody></table>
+
+<h3>Calculadora: ¿cuánto te queda antes de romper?</h3>
+<div class="card calc">
+<label for="sz">Tamaño de cuenta Blue Guardian</label>
+<select id="sz" onchange="upd()"></select>
+<div class="out">
+<div class="o"><div class="l">Pérdida diaria máx.</div><div class="v a" id="dl">—</div></div>
+<div class="o"><div class="l">Drawdown máx. total</div><div class="v r" id="ml">—</div></div>
+</div></div>
+<script>
+var SZ=[5000, 10000, 25000, 50000, 100000, 200000],DLP=0.04,MLP=0.08;
+var s=document.getElementById('sz');
+SZ.forEach(function(v){var o=document.createElement('option');o.value=v;o.textContent='$'+v.toLocaleString('en-US');s.appendChild(o)});
+function f(n){return '$'+Math.round(n).toLocaleString('en-US')}
+function upd(){var v=+s.value;document.getElementById('dl').textContent=f(v*DLP);document.getElementById('ml').textContent=f(v*MLP)}
+upd();
+</script>
+
+<h2>Daily loss: la regla que más cuentas mata</h2>
+<p>Blue Guardian te deja perder hasta <strong>4%</strong> en un solo día.
+Si tu equity (flotante incluido) toca ese piso, la cuenta se rompe — no importa que después recupere.
+Es el límite que silenciosamente liquida más cuentas, porque un solo trade grande o una racha en un mal día alcanza.</p><h2>Drawdown máximo (8% estático)</h2>
+<p>El tope total de pérdida de Blue Guardian es <strong>8%</strong>. Al ser <strong>estático</strong>, el piso no sube cuando ganás: siempre se mide contra el balance inicial. Eso es bueno — te da aire a medida que crecés.</p><h2>Regla de consistencia</h2><p>50% en eval (40% fondeado). No termina la cuenta — seguís operando hasta que el promedio se equilibre.</p><h2>Estrategias prohibidas</h2><ul><li>hedging entre cuentas</li><li>arbitraje</li></ul>
+
+<div class="card lime">
+<div class="kicker">No te prometo ganar</div>
+<h3 style="margin-top:.4rem">PropGuard te frena antes de romper estas reglas de Blue Guardian</h3>
+<p>Cargás tu cuenta de Blue Guardian, seguís operando con <strong>tu</strong> estrategia, y PropGuard
+vigila en vivo cada límite (daily loss, drawdown, consistencia, quick strike, noticias). Cuando te
+acercás al borde, <strong>cierra o bloquea automáticamente</strong> — antes de que el tecnicismo te mate la cuenta.</p>
+<a class="cta" href="/#precio">Ver planes (desde 19 USDT) →</a>
+</div>
+
+<h2>Preguntas frecuentes sobre las reglas de Blue Guardian</h2><details><summary>¿Cuál es el daily loss de Blue Guardian?</summary><p>El límite de pérdida diaria de Blue Guardian es del 4% del balance/equity. Si lo superás en un día, perdés la cuenta.</p></details><details><summary>¿Cuál es el drawdown máximo de Blue Guardian?</summary><p>El drawdown máximo de Blue Guardian es del 8% (estático). </p></details><details><summary>¿Blue Guardian tiene regla de consistencia?</summary><p>Sí. 50% en eval (40% fondeado). No termina la cuenta — seguís operando hasta que el promedio se equilibre.</p></details><details><summary>¿PropGuard funciona con Blue Guardian?</summary><p>Sí. PropGuard corre con tu estrategia en Blue Guardian y te frena automáticamente antes de romper el daily loss, el drawdown y las demás reglas. Soporta MT4 y MT5.</p></details>
+
+<div class="quote">No te prometo ganar — te aseguro <span>no morir por un tecnicismo.</span></div>
+<p>Mirá también: <a href="/reglas/">todas las firmas</a> · <a href="/compare.html">comparador</a> ·
+<a href="/blog/reglas-que-mas-matan-cuentas.html">las 5 reglas que más matan cuentas</a>.</p>
+
+<p class="disc">Valores de research (may-2026) de fuentes públicas y help centers oficiales. Cada firma tiene
+varios programas con valores distintos; acá se modela el flagship. Confirmá contra el ToS del producto exacto
+antes de operar. PropGuard no está afiliado a Blue Guardian.</p>
+</article></div>
+<footer><div class="wrap">
+PROPGUARD · hecho por un trader, para traders.<br>
+// reglas orientativas — el cumplimiento oficial lo define cada firma y su ToS. No afiliado a ninguna prop firm.<br>
+<a href="/">Inicio</a> · <a href="/reglas/">Reglas por firma</a> · <a href="/blog/">Blog</a> · <a href="/compare.html">Comparador</a>
+</div></footer>
+<div class="tape"></div></body></html>
