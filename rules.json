@@ -1,0 +1,236 @@
+{
+  "_meta": {
+    "version": "0.5-research",
+    "updated": "2026-05-30",
+    "disclaimer": "Valores de research (may-2026) de fuentes publicas + help centers oficiales donde se indica. Cada firma tiene varios programas (1/2/3-step, instant) con valores distintos — acá se modela el programa flagship de cada una. Confirmar contra el ToS del producto exacto antes de operar/vender.",
+    "confidence_levels": {
+      "verified": "Validado contra cuenta real propia",
+      "draft": "Research de fuentes publicas / help center oficial — confirmar edge cases",
+      "stub": "Datos incompletos"
+    },
+    "enforcement_tiers": {
+      "full": ["MT4", "MT5"],
+      "planned": ["cTrader"],
+      "monitor_only": ["DXtrade", "Match-Trader", "TradeLocker", "Volumetrica"],
+      "futures_separate": ["Rithmic", "Tradovate", "WealthCharts", "TopstepX", "NinjaTrader", "Sierra Chart"],
+      "_note": "Que la firma OFREZCA una plataforma no implica que PropGuard pueda frenar en vivo ahi. MT4/MT5 = enforcement activo completo (API conocida). cTrader = viable, planned. DXtrade/Match-Trader/TradeLocker = posiblemente solo monitoreo (sin API local de ordenes). Futuros = stack aparte."
+    }
+  },
+  "firms": {
+    "ftmo": {
+      "name": "FTMO", "type": "cfd", "confidence": "verified", "drawdown_basis": "equity",
+      "platforms": ["MT4", "MT5", "cTrader", "DXtrade"],
+      "account_sizes": [10000, 25000, 50000, 100000, 200000],
+      "phases": {
+        "challenge": { "label": "Challenge (P1)", "profit_target_pct": 0.10, "min_trading_days": 4 },
+        "verification": { "label": "Verification (P2)", "profit_target_pct": 0.05, "min_trading_days": 4 },
+        "funded": { "label": "FTMO Account", "profit_target_pct": null, "min_trading_days": 0 }
+      },
+      "limits": { "daily_loss_pct": 0.05, "max_loss_pct": 0.10, "max_loss_type": "static" },
+      "rules": {
+        "consistency": { "enabled": false, "_note": "FTMO no tiene cap % duro de consistencia — solo una guía blanda a payout (ningún trade desproporcionado). No bloquea en challenge." },
+        "quick_strike": { "enabled": false },
+        "news_blackout": { "enabled": true, "minutes_around": 2, "_note": "CONFIRMADO (ftmo.com): ±2 min de noticias seleccionadas en instrumentos targeted (cuentas Standard). Podés HOLDear si abriste +2min antes. Swing exenta." },
+        "weekend_holding": { "eval": true, "funded_standard": false, "swing": true, "_note": "Eval: permitido ambas fases. Funded Standard: cerrar antes del finde. Swing: exenta de news Y weekend." },
+        "leverage_real": null,
+        "prohibited_strategies": ["latency arbitrage", "reverse arbitrage", "tick scalping exploits", "hedging entre cuentas"]
+      }
+    },
+    "fundednext": {
+      "name": "FundedNext", "type": "cfd", "confidence": "verified", "drawdown_basis": "balance/equity",
+      "platforms": ["MT4", "MT5", "cTrader", "Match-Trader", "TradingView (análisis)"],
+      "account_sizes": [6000, 15000, 25000, 50000, 100000, 200000, 300000],
+      "phases": {
+        "phase1": { "label": "Stellar 2-Step P1", "profit_target_pct": 0.08, "min_trading_days": 5 },
+        "phase2": { "label": "Stellar 2-Step P2", "profit_target_pct": 0.05, "min_trading_days": 5 },
+        "funded": { "label": "FundedNext Account", "profit_target_pct": null, "min_trading_days": 0 }
+      },
+      "limits": { "daily_loss_pct": 0.05, "max_loss_pct": 0.10, "max_loss_type": "static" },
+      "rules": {
+        "consistency": { "enabled": false, "_note": "CONFIRMADO (help center): la regla 40% NO aplica a las cuentas CFD Stellar (2-Step/1-Step/Lite/Instant) — ni en challenge ni en funded. Solo aplica a Futuros (Bolt/Legacy)." },
+        "quick_strike": { "enabled": true, "window_sec": 30, "warn_pct": 0.20, "breach_pct": 0.30 },
+        "news_blackout": { "enabled": false, "verify": true },
+        "leverage_real": { "indices": 15, "verify": true },
+        "prohibited_strategies": ["martingale", "grid", "HFT >200/día", "hedging entre cuentas", "arbitraje", "tick scalping", "latency", "quick strike method"]
+      }
+    },
+    "the5ers": {
+      "name": "The5ers", "type": "cfd", "confidence": "draft", "drawdown_basis": "balance/equity",
+      "platforms": ["MT5", "Match-Trader"],
+      "_researched": "help.the5ers.com (oficial), may-2026. Classic High Stakes.",
+      "account_sizes": [2500, 5000, 10000, 25000, 50000, 100000],
+      "phases": {
+        "step1": { "label": "Classic HS Step 1", "profit_target_pct": 0.08, "min_trading_days": 3 },
+        "step2": { "label": "Classic HS Step 2", "profit_target_pct": 0.05, "min_trading_days": 3 },
+        "funded": { "label": "Funded", "profit_target_pct": null, "min_trading_days": 0 }
+      },
+      "limits": { "daily_loss_pct": 0.05, "max_loss_pct": 0.10, "max_loss_type": "static", "_note": "Daily 5% del cierre del día anterior (equity/balance, el mayor) a las 00:00 server. Max 10% absoluto del balance inicial." },
+      "rules": {
+        "consistency": { "enabled": true, "cap_pct": null, "_note": "No es un cap %, sino: mínimo 3 días PROFITABLES (≥0.5% cada uno). Evita pasar de un saque." },
+        "quick_strike": { "enabled": false },
+        "news_blackout": { "enabled": false, "verify": true },
+        "leverage_real": null,
+        "inactivity_days": 30,
+        "prohibited_strategies": ["hedging entre cuentas", "arbitraje", "_note: New High Stakes usa target 10%/5%"]
+      }
+    },
+    "fundingpips": {
+      "name": "FundingPips", "type": "cfd", "confidence": "draft", "drawdown_basis": "balance/equity",
+      "platforms": ["MT5", "cTrader", "Match-Trader"],
+      "_researched": "fundingpips.com (objetivos + help center News/Weekend) + multiples fuentes, may-2026. 2-Step Standard. CONFIRMADO multi-fuente.",
+      "account_sizes": [5000, 10000, 25000, 50000, 100000, 200000],
+      "phases": {
+        "phase1": { "label": "2-Step P1 (Student)", "profit_target_pct": 0.08, "min_trading_days": 3 },
+        "phase2": { "label": "2-Step P2 (Practitioner)", "profit_target_pct": 0.05, "min_trading_days": 3 },
+        "funded": { "label": "Funded (Master)", "profit_target_pct": null, "min_trading_days": 0 }
+      },
+      "limits": { "daily_loss_pct": 0.05, "max_loss_pct": 0.10, "max_loss_type": "static", "_note": "Max 10% static, contador fresco en P2 (no arrastra de P1). $200k bajo tipo de challenge distinto." },
+      "rules": {
+        "consistency": { "enabled": false, "_note": "SIN consistency en evaluación (mi v0.2 decía 30%, era incorrecto). La regla 35% aplica SOLO al payout On-Demand (split 90%); los ciclos Weekly/Bi-Weekly/Monthly NO la tienen." },
+        "quick_strike": { "enabled": false },
+        "news_blackout": { "enabled": true, "minutes_around": 10, "_note": "Prohibido abrir/cerrar DELIBERADAMENTE alrededor de noticias high-impact (cierre de cuenta). Holding a través está permitido. Trades abiertos 5h+ antes del evento son válidos aunque cierren en la ventana de 10 min." },
+        "leverage_real": null,
+        "weekend_holding": { "eval": true, "funded": false, "_note": "Weekend hold permitido en evaluación; en Master temporalmente no (auto-close viernes)." },
+        "prohibited_strategies": ["news gambling deliberado", "hedging entre cuentas", "HFT", "arbitraje"]
+      }
+    },
+    "e8": {
+      "name": "E8 Markets", "type": "cfd", "confidence": "draft", "drawdown_basis": "balance/equity",
+      "platforms": ["cTrader", "TradeLocker", "Match-Trader"],
+      "_researched": "help.e8markets.com (oficial), may-2026. E8 Classic 2-step.",
+      "account_sizes": [5000, 10000, 25000, 50000, 100000, 250000],
+      "phases": {
+        "phase1": { "label": "E8 Classic P1", "profit_target_pct": 0.08, "min_trading_days": 0 },
+        "phase2": { "label": "E8 Classic P2", "profit_target_pct": 0.04, "min_trading_days": 0 },
+        "funded": { "label": "E8 Trader", "profit_target_pct": null, "min_trading_days": 0 }
+      },
+      "limits": { "daily_loss_pct": 0.04, "max_loss_pct": 0.08, "max_loss_type": "static", "_note": "Daily 4% floating/closed desde el balance del día. Max 8% running equity. Hay otros programas (One 1-step, Track 3-step) con valores distintos. Inactividad 60 días." },
+      "rules": {
+        "consistency": { "enabled": false, "_note": "Sin consistency en evaluación. 40% best-day SÍ aplica en E8 Trader (fondeado)." },
+        "quick_strike": { "enabled": false },
+        "news_blackout": { "enabled": false, "verify": true },
+        "leverage_real": null,
+        "prohibited_strategies": ["hedging entre cuentas", "arbitraje"]
+      }
+    },
+    "alphacapital": {
+      "name": "Alpha Capital Group", "type": "cfd", "confidence": "draft", "drawdown_basis": "balance/equity",
+      "platforms": ["MT5", "cTrader", "DXtrade", "TradeLocker"],
+      "_researched": "help.alphacapitalgroup.uk + research, may-2026. Representativo 2-step — varía mucho por plan.",
+      "account_sizes": [10000, 25000, 50000, 100000, 200000],
+      "phases": {
+        "phase1": { "label": "2-Step P1", "profit_target_pct": 0.08, "min_trading_days": 3 },
+        "phase2": { "label": "2-Step P2", "profit_target_pct": 0.05, "min_trading_days": 3 },
+        "funded": { "label": "Funded", "profit_target_pct": null, "min_trading_days": 0 }
+      },
+      "limits": { "daily_loss_pct": 0.04, "max_loss_pct": 0.08, "max_loss_type": "static", "_note": "Flagship Alpha Pro 8%: daily 4% (balance-based), max 8% static, target 8%/5%. Variante Alpha Pro 10%: daily 5% + max 10% static + target 10%/5%. Alpha One = 1 día min. Inactividad 30 días." },
+      "rules": {
+        "consistency": { "enabled": true, "cap_pct": 0.40, "basis": "best_day_at_payout", "_note": "CONFIRMADO: 40% Best Day Rule — solo en cuentas con payout On-Demand (+ 2% min gross profit). No aplica a otros ciclos." },
+        "quick_strike": { "enabled": true, "window_sec": 120, "basis": "sub_2min", "breach_pct": 0.50, "_note": "CONFIRMADO: regla de 2 min. ≥50% del profit debe venir de trades >2 min (eval Y funded). Si trades <2min generan >50% del P&L, esos profits se quitan. Todo trade min 2 min abierto." },
+        "news_blackout": { "enabled": true, "minutes_around": 2, "verify": true, "_note": "Prohíbe 'news gambling'. Confirmar ventana exacta." },
+        "leverage_real": null,
+        "inactivity_days": 30,
+        "prohibited_strategies": ["news gambling", "hedging entre cuentas", "arbitraje"]
+      }
+    },
+    "goatfundedtrader": {
+      "name": "Goat Funded Trader", "type": "cfd", "confidence": "draft", "drawdown_basis": "balance/equity",
+      "platforms": ["MT5", "cTrader", "TradeLocker", "Match-Trader", "Volumetrica"],
+      "_researched": "help.goatfundedtrader.com + research, may-2026. 2-Step Standard. (MT5/cTrader no disponibles en USA).",
+      "account_sizes": [5000, 10000, 25000, 50000, 100000, 200000],
+      "phases": {
+        "step1": { "label": "2-Step Standard S1", "profit_target_pct": 0.08, "min_trading_days": 0 },
+        "step2": { "label": "2-Step Standard S2", "profit_target_pct": 0.06, "min_trading_days": 0 },
+        "funded": { "label": "Funded (80% split)", "profit_target_pct": null, "min_trading_days": 0 }
+      },
+      "limits": { "daily_loss_pct": 0.04, "max_loss_pct": 0.10, "max_loss_type": "static", "_note": "CONFIRMADO 2-Step Standard: daily 4%, max 10% static (balance-based, no trail), target 8%/6%, split 80% bi-weekly. Variantes PRO/GOAT con otros valores." },
+      "rules": {
+        "consistency": { "enabled": false, "_note": "Sin consistency en 2-Step Standard." },
+        "quick_strike": { "enabled": false, "verify": true },
+        "news_blackout": { "enabled": false, "verify": true },
+        "leverage_real": null,
+        "prohibited_strategies": ["hedging entre cuentas", "arbitraje"]
+      }
+    },
+    "blueguardian": {
+      "name": "Blue Guardian", "type": "cfd", "confidence": "draft", "drawdown_basis": "balance/equity",
+      "platforms": ["MT4", "MT5", "cTrader", "DXtrade", "TradeLocker"],
+      "_platforms_verify": true,
+      "_researched": "research may-2026. Elite Guardian Evaluation (2-step). Varios programas.",
+      "account_sizes": [5000, 10000, 25000, 50000, 100000, 200000],
+      "phases": {
+        "phase1": { "label": "2-Step Standard P1", "profit_target_pct": 0.08, "min_trading_days": 0 },
+        "phase2": { "label": "2-Step Standard P2", "profit_target_pct": 0.04, "min_trading_days": 0 },
+        "funded": { "label": "Funded", "profit_target_pct": null, "min_trading_days": 0 }
+      },
+      "limits": { "daily_loss_pct": 0.04, "max_loss_pct": 0.08, "max_loss_type": "static", "_note": "CONFIRMADO 2-Step Standard: P1 8% / P2 4%, daily 4%, max 8%. 'Guardian Shield' opcional limita daily a 2%. Otros programas: Unlimited/Rapid." },
+      "rules": {
+        "consistency": { "enabled": true, "cap_pct": 0.50, "behavior": "non_terminating", "_note": "50% en eval (40% fondeado). No termina la cuenta — seguís operando hasta que el promedio se equilibre." },
+        "quick_strike": { "enabled": false, "verify": true },
+        "news_blackout": { "enabled": false, "verify": true },
+        "leverage_real": null,
+        "prohibited_strategies": ["hedging entre cuentas", "arbitraje"]
+      }
+    },
+    "ftuk": {
+      "name": "FTUK", "type": "cfd", "confidence": "draft", "drawdown_basis": "balance/equity",
+      "platforms": ["MT5", "Match-Trader", "TradeLocker"],
+      "_researched": "faq.ftuk.com + research, may-2026. Flagship 1-Step (Forex).",
+      "account_sizes": [14000, 28000, 56000, 87000, 174000],
+      "phases": {
+        "onestep": { "label": "1-Step (Forex)", "profit_target_pct": 0.10, "min_trading_days": 0 },
+        "instant": { "label": "Instant Funding", "profit_target_pct": 0.10, "min_trading_days": 0 },
+        "funded": { "label": "Funded", "profit_target_pct": null, "min_trading_days": 0 }
+      },
+      "limits": { "daily_loss_pct": 0.04, "max_loss_pct": 0.08, "max_loss_type": "relative", "_note": "CONFIRMADO 1-Step (Forex): daily 4%, max 8% relativo, target 10%, split 80%, EAs/copy permitido. Variante Instant: daily 5% + max 6% TRAILING. Daily DD a las 22:00 UTC. News ±5min." },
+      "rules": {
+        "consistency": { "enabled": false, "verify": true },
+        "quick_strike": { "enabled": false, "verify": true },
+        "news_blackout": { "enabled": true, "minutes_around": 5, "_note": "Prohíbe trading ±5 min de noticias de alto impacto." },
+        "leverage_real": null,
+        "prohibited_strategies": ["martingale", "HFT", "tick scalping (con EA/bot)"]
+      }
+    },
+    "apex": {
+      "name": "Apex Trader Funding", "type": "futures", "supported": true, "confidence": "draft",
+      "platforms": ["Rithmic (NinjaTrader/Sierra/Quantower)", "Tradovate (TradingView)", "WealthCharts"],
+      "account_sizes": [25000, 50000, 100000, 150000],
+      "_researched": "support.apextraderfunding.com + research, may-2026. Apex 4.0. Plataforma se elige al comprar (no se cambia).",
+      "drawdown_type": "trailing_eod",
+      "drawdown_note": "Trailing EOD: el umbral se recalcula 1x/día al cierre (4:59:59 PM ET) siguiendo el peak balance, hasta un safety net fijo. Overnight prohibido desde mar-2026.",
+      "daily_loss": { "enabled": false, "_note": "Apex no tiene daily loss limit (su sello). Confirmar si 4.0 lo cambió." },
+      "consistency": { "enabled": true, "cap_pct": 0.30, "basis": "payout_PA", "verify": true, "_note": "Sin consistency en evaluación; regla ~30% en Performance Accounts al payout. Confirmar valor exacto 4.0." },
+      "accounts": [
+        { "size": 25000,  "target_usd": 1500, "trailing_usd": 1500, "max_contracts": 4 },
+        { "size": 50000,  "target_usd": 3000, "trailing_usd": 2500, "max_contracts": 10 },
+        { "size": 100000, "target_usd": 6000, "trailing_usd": 3000, "max_contracts": 14 },
+        { "size": 150000, "target_usd": 9000, "trailing_usd": 5000, "max_contracts": 17 }
+      ],
+      "_amounts_note": "Apex 4.0 (mar-2026): se ELIMINARON los tamaños 250k y 300k; máximo ahora $150k. Cada tamaño viene en 2 sabores: EOD trailing (default) e Intraday trailing (más barato). Montos confirmados contra docs legacy/4.0."
+    },
+    "topstep": {
+      "name": "Topstep", "type": "futures", "supported": true, "confidence": "draft",
+      "platforms": ["TopstepX", "NinjaTrader", "Tradovate", "Sierra Chart"],
+      "account_sizes": [50000, 100000, 150000],
+      "_researched": "help.topstep.com + research, may-2026. Trading Combine.",
+      "drawdown_type": "trailing_intraday",
+      "drawdown_note": "Max Loss Limit trailing INTRADAY: sigue el peak de equity en vivo durante la sesión. Overnight prohibido desde mar-2026.",
+      "daily_loss": { "enabled": true, "soft": true, "_note": "Daily Loss Limit opcional y soft: si lo tocás auto-liquida la sesión pero NO es violación de regla." },
+      "consistency": { "enabled": true, "cap_pct": 0.50, "basis": "combine_eval", "_note": "CONFIRMADO (help.topstep.com): mejor día ≤ 50% del profit target. Aplica para pasar el Combine, avanzar a XFA y pedir payout." },
+      "accounts": [
+        { "size": 50000,  "target_usd": 3000, "trailing_usd": 2000, "daily_loss_usd": 1000, "max_contracts": 5,  "max_micros": 50 },
+        { "size": 100000, "target_usd": 6000, "trailing_usd": 3000, "daily_loss_usd": 2000, "max_contracts": 10, "max_micros": 100 },
+        { "size": 150000, "target_usd": 9000, "trailing_usd": 4500, "daily_loss_usd": 3000, "max_contracts": 15, "max_micros": 150 }
+      ]
+    },
+    "myfundedfutures": {
+      "name": "MyFundedFutures", "type": "futures", "supported": false, "confidence": "draft",
+      "platforms": ["NinjaTrader", "Tradovate", "TradingView", "Quantower"],
+      "_researched": "help.myfundedfutures.com + research, may-2026. 5 planes (Core/Rapid/Pro/Flex/Builder).",
+      "_note": "FUTUROS — SIN daily loss limit (como Apex). Max drawdown varía por plan: 3% EOD trailing (Core/Pro), 4% intraday trailing (Rapid), 4% EOD fixed (Flex), buffer fijo (Builder). Consistency 50%: en eval de Core/Rapid/Flex/Pro (no en funded Core). Montos $ por tamaño sin cargar — modelar como Apex/Topstep cuando se confirmen.",
+      "consistency": { "enabled": true, "cap_pct": 0.50, "basis": "eval", "verify": true },
+      "account_sizes": [50000, 100000, 150000],
+      "accounts": []
+    }
+  }
+}

@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tu bot, blindado contra las reglas de tu prop firm</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:#0b0d12; --surface:#151922; --surface-2:#1d222e; --line:#2a3140;
+    --txt:#e9edf4; --txt-dim:#8b94a7; --green:#22c55e; --amber:#f59e0b;
+    --red:#ef4444; --accent:#5b8cff; --radius:14px;
+  }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:'Outfit',system-ui,sans-serif; background:var(--bg); color:var(--txt); line-height:1.5; -webkit-font-smoothing:antialiased; padding:0 1rem 4rem; }
+  .wrap { max-width:680px; margin:0 auto; }
+  header { text-align:center; padding:2.5rem 0 1rem; }
+  .brand { font-size:.82rem; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:var(--accent); }
+  h1 { font-size:1.7rem; font-weight:800; margin:.6rem 0 .4rem; line-height:1.2; }
+  .sub { color:var(--txt-dim); font-size:1rem; max-width:32rem; margin:0 auto; }
+
+  .selectors { display:grid; grid-template-columns:1fr 1fr 1fr; gap:.6rem; margin:1.5rem 0; }
+  .sel label { display:block; font-size:.75rem; color:var(--txt-dim); text-transform:uppercase; letter-spacing:.06em; margin-bottom:.35rem; }
+  select { width:100%; padding:.75rem .8rem; background:var(--surface); border:1px solid var(--line); border-radius:10px; color:var(--txt); font-family:inherit; font-size:.95rem; cursor:pointer; appearance:none; background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'><path fill='%238b94a7' d='M6 8L0 0h12z'/></svg>"); background-repeat:no-repeat; background-position:right .8rem center; }
+  select:focus { outline:2px solid var(--accent); outline-offset:1px; }
+
+  .headline { background:linear-gradient(135deg,#1a2333,#151922); border:1px solid var(--line); border-radius:var(--radius); padding:1.2rem 1.4rem; margin-bottom:1rem; text-align:center; }
+  .headline .big { font-size:1.3rem; font-weight:800; }
+  .headline .small { color:var(--txt-dim); font-size:.9rem; margin-top:.2rem; }
+
+  .conf { display:inline-block; font-size:.68rem; font-weight:700; text-transform:uppercase; letter-spacing:.05em; padding:.15rem .5rem; border-radius:6px; margin-top:.5rem; }
+  .conf-verified { background:rgba(34,197,94,.15); color:var(--green); }
+  .conf-draft { background:rgba(245,158,11,.15); color:var(--amber); }
+  .conf-stub { background:rgba(239,68,68,.15); color:#fca5a5; }
+
+  .grid { display:grid; grid-template-columns:1fr 1fr; gap:.7rem; }
+  .card { background:var(--surface); border:1px solid var(--line); border-radius:12px; padding:1rem 1.1rem; }
+  .card.wide { grid-column:1/-1; }
+  .card .k { font-size:.75rem; color:var(--txt-dim); text-transform:uppercase; letter-spacing:.06em; }
+  .card .v { font-size:1.45rem; font-weight:800; margin-top:.2rem; }
+  .card .v small { font-size:.85rem; font-weight:600; color:var(--txt-dim); }
+  .card .d { font-size:.82rem; color:var(--txt-dim); margin-top:.35rem; line-height:1.45; }
+  .v.green { color:var(--green); } .v.red { color:var(--red); } .v.amber { color:var(--amber); }
+  .state-off { color:var(--txt-dim); }
+
+  .verify { display:inline-block; font-size:.66rem; font-weight:700; text-transform:uppercase; letter-spacing:.05em; color:var(--amber); background:rgba(245,158,11,.13); padding:.12rem .45rem; border-radius:5px; margin-left:.4rem; vertical-align:middle; }
+  .pchip { font-size:.8rem; padding:.3rem .65rem; border-radius:7px; }
+  .pchip small { opacity:.75; }
+  .chip-full { background:rgba(34,197,94,.13); color:var(--green); }
+  .chip-plan { background:rgba(91,140,255,.13); color:var(--accent); }
+  .chip-mon { background:rgba(245,158,11,.12); color:var(--amber); }
+  .chip-fut { background:rgba(139,148,167,.15); color:var(--txt-dim); }
+  .chips { display:flex; flex-wrap:wrap; gap:.4rem; margin-top:.5rem; }
+  .chip { font-size:.78rem; background:rgba(239,68,68,.12); color:#fca5a5; padding:.25rem .6rem; border-radius:7px; }
+
+  .notice { background:var(--surface); border:1px dashed var(--line); border-radius:12px; padding:1.4rem; text-align:center; color:var(--txt-dim); }
+  .notice strong { color:var(--txt); }
+
+  .cta { margin-top:1.5rem; background:linear-gradient(135deg,#1a2333,#151922); border:1px solid var(--line); border-radius:var(--radius); padding:1.6rem; text-align:center; }
+  .cta h3 { font-size:1.2rem; font-weight:800; margin-bottom:.5rem; }
+  .cta p { color:var(--txt-dim); font-size:.95rem; margin-bottom:1.1rem; }
+  .cta .price { display:flex; gap:.7rem; justify-content:center; flex-wrap:wrap; margin-bottom:1.1rem; }
+  .plan { flex:1; min-width:150px; max-width:220px; background:var(--surface); border:1px solid var(--line); border-radius:12px; padding:1rem; }
+  .plan .amt { font-size:1.5rem; font-weight:800; }
+  .plan .per { color:var(--txt-dim); font-size:.85rem; }
+  .cta button { padding:.85rem 1.6rem; border:0; border-radius:10px; background:var(--accent); color:#fff; font-family:inherit; font-weight:700; font-size:1rem; cursor:pointer; }
+
+  footer { text-align:center; color:var(--txt-dim); font-size:.8rem; margin-top:2.5rem; line-height:1.6; }
+  @media (max-width:560px){ .selectors{grid-template-columns:1fr;} .grid{grid-template-columns:1fr;} h1{font-size:1.4rem;} }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand">Tu autopiloto blindado</div>
+    <h1>Elegí tu firma. El bot se encarga de no romper ninguna regla.</h1>
+    <p class="sub">Corré tu propia estrategia. Vos elegís firma y tamaño — los límites de pérdida, consistency, quick strike y demás se cargan solos, y el bot se frena antes de romperlos.</p>
+  </header>
+
+  <div class="selectors">
+    <div class="sel"><label for="firm">Prop firm</label><select id="firm"></select></div>
+    <div class="sel"><label for="phase">Fase</label><select id="phase"></select></div>
+    <div class="sel"><label for="size">Tamaño</label><select id="size"></select></div>
+  </div>
+
+  <div class="headline">
+    <div class="big" id="hl-big">Cargando…</div>
+    <div class="small" id="hl-small"></div>
+    <span class="conf" id="hl-conf" hidden></span>
+  </div>
+
+  <div class="grid" id="cards"></div>
+
+  <div class="cta">
+    <h3>Listo para correr — sin que pienses en una sola regla</h3>
+    <p>Corré tu estrategia; PropGuard se frena solo antes de tocar cualquier límite de tu firma. Vos mirás.</p>
+    <div class="price">
+      <div class="plan"><div class="amt">$0<span class="per"> Radar</span></div><div class="per">monitoreo + alertas, gratis</div></div>
+      <div class="plan"><div class="amt">$19<span class="per">/mes</span></div><div class="per">Guardian — enforcement activo, 1 cuenta</div></div>
+    </div>
+    <button type="button">Quiero el acceso anticipado</button>
+  </div>
+
+  <footer>
+    Reglas orientativas — el cumplimiento oficial lo define cada firma y su ToS vigente.<br>
+    <span class="conf conf-verified">verificado</span> validado en cuenta real ·
+    <span class="conf conf-draft">borrador</span> research público ·
+    <span class="conf conf-stub">stub</span> datos incompletos
+  </footer>
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+const usd = n => '$' + Math.round(n).toLocaleString('en-US');
+const pct = n => (n*100).toFixed(n*100 % 1 === 0 ? 0 : 1) + '%';
+const vbadge = r => (r && r.verify) ? '<span class="verify">verificar</span>' : '';
+let RULES = null;
+
+async function boot() {
+  try {
+    const res = await fetch('rules.json');
+    RULES = await res.json();
+  } catch (e) {
+    $('hl-big').textContent = 'No pude cargar rules.json';
+    $('hl-small').textContent = 'Abrí esta página vía localhost (no file://). Ver consola.';
+    return;
+  }
+  fillFirms();
+  // Default: FundedNext 50k P1 (cuenta real)
+  if (RULES.firms.fundednext) { $('firm').value = 'fundednext'; fillPhaseSize(); $('size').value = '50000'; render(); }
+}
+
+function fillFirms() {
+  $('firm').innerHTML = Object.entries(RULES.firms).map(([k,f]) => {
+    const tag = f.type === 'futures' ? ' (futuros)' : '';
+    return `<option value="${k}">${f.name}${tag}</option>`;
+  }).join('');
+  fillPhaseSize();
+}
+function fillPhaseSize() {
+  const f = RULES.firms[$('firm').value];
+  if (f.type === 'futures' && f.supported) {
+    $('phase').innerHTML = '<option value="eval">Evaluation / Combine</option>';
+    $('size').innerHTML = (f.accounts || []).map(a => `<option value="${a.size}">${usd(a.size)}</option>`).join('');
+  } else {
+    const phases = f.phases || {};
+    $('phase').innerHTML = Object.entries(phases).map(([k,p]) => `<option value="${k}">${p.label}</option>`).join('') || '<option>—</option>';
+    $('size').innerHTML = (f.account_sizes || []).map(s => `<option value="${s}">${usd(s)}</option>`).join('') || '<option>—</option>';
+  }
+  render();
+}
+
+function confBadge(c) {
+  const map = { verified:'verificado', draft:'borrador', stub:'stub' };
+  return `<span class="conf conf-${c}" style="display:inline-block">${map[c]||c}</span>`;
+}
+
+function render() {
+  const f = RULES.firms[$('firm').value];
+  $('hl-conf').hidden = true;
+
+  // Firmas de futuros no soportadas: cartel
+  if (f.type === 'futures' && !f.supported) {
+    $('hl-big').textContent = f.name + ' · futuros';
+    $('hl-small').textContent = 'Trailing drawdown — modelo distinto';
+    $('cards').innerHTML = `<div class="card wide notice"><strong>${f.name}</strong> no modelado todavía. ${f._note ? '<br><br>' + f._note : ''}</div>`;
+    return;
+  }
+
+  // Firmas de futuros soportadas: montos en USD por tamaño
+  if (f.type === 'futures' && f.supported) {
+    const size = parseFloat($('size').value);
+    const acc = (f.accounts || []).find(a => a.size === size);
+    if (!acc) return;
+    $('hl-big').innerHTML = `${f.name} · ${usd(size)} · futuros`;
+    $('hl-small').textContent = f.drawdown_note || '';
+    $('hl-conf').hidden = false;
+    $('hl-conf').className = 'conf conf-' + f.confidence;
+    $('hl-conf').textContent = f.verify_amounts ? 'borrador — montos a confirmar' : 'borrador — verificar';
+
+    const dtype = f.drawdown_type === 'trailing_intraday' ? 'trailing intradía' : (f.drawdown_type === 'trailing_eod' ? 'trailing EOD' : 'trailing');
+    const fc = [];
+    fc.push(card('Profit target', `<span class="v green">+${usd(acc.target_usd)}</span>`, 'Para pasar la evaluación.'));
+    fc.push(card('Trailing drawdown', `<span class="v red">${usd(acc.trailing_usd)}</span>`, `${dtype}. Sigue tu peak balance hasta un safety net fijo. El bot frena antes de tocarlo.`));
+    if (f.daily_loss && f.daily_loss.enabled && acc.daily_loss_usd) {
+      fc.push(card('Daily loss limit', `<span class="v amber">${usd(acc.daily_loss_usd)}</span>`, f.daily_loss.soft ? 'Soft: auto-liquida la sesión, no es violación.' : 'Límite de pérdida diaria.'));
+    } else {
+      fc.push(card('Daily loss limit', `<span class="v state-off">No tiene</span>`, f.daily_loss && f.daily_loss._note ? f.daily_loss._note : 'Sin límite diario.'));
+    }
+    fc.push(card('Máx contratos', `<span class="v">${acc.max_contracts}${acc.max_micros ? ` <small>/ ${acc.max_micros} micros</small>` : ''}</span>`, 'El bot no excede el tope de posición.'));
+    const C = f.consistency || {};
+    if (C.enabled) fc.push(card('Consistency' + (C.verify ? '<span class="verify">verificar</span>' : ''), `<span class="v amber">${pct(C.cap_pct)}</span>`,
+      C._note || `Tu mejor día no puede pasar el ${pct(C.cap_pct)} del total.`));
+    fc.push(platformsCard(f));
+    fc.push(`<div class="card wide notice" style="text-align:left">${f._amounts_note || f.drawdown_note || ''}</div>`);
+    $('cards').innerHTML = fc.join('');
+    return;
+  }
+
+  const phase = (f.phases || {})[$('phase').value];
+  const size = parseFloat($('size').value);
+  if (!phase || isNaN(size)) return;
+  const L = f.limits || {}, R = f.rules || {};
+
+  const dailyUsd = size * (L.daily_loss_pct || 0);
+  const maxUsd = size * (L.max_loss_pct || 0);
+  const targetUsd = phase.profit_target_pct != null ? size * phase.profit_target_pct : null;
+
+  $('hl-big').innerHTML = `${f.name} · ${usd(size)} · ${phase.label}`;
+  $('hl-small').textContent = `Drawdown por ${f.drawdown_basis||'—'} · el bot vigila cada límite en tiempo real`;
+  $('hl-conf').hidden = false;
+  $('hl-conf').className = 'conf conf-' + f.confidence;
+  $('hl-conf').textContent = ({verified:'verificado en cuenta real', draft:'borrador — verificar valores', stub:'datos incompletos — verificar'})[f.confidence] || f.confidence;
+
+  const cards = [];
+  cards.push(card('Pérdida diaria máx' + vbadge(L), `<span class="v red">−${usd(dailyUsd)}</span> <small>${pct(L.daily_loss_pct||0)}</small>`,
+    'El bot frena la operativa antes de tocarlo.'));
+  cards.push(card('Pérdida total máx', `<span class="v red">−${usd(maxUsd)}</span> <small>${pct(L.max_loss_pct||0)}</small>`,
+    `Drawdown ${L.max_loss_type||''} por ${f.drawdown_basis||'—'}.`));
+  cards.push(card('Profit target', targetUsd != null ? `<span class="v green">+${usd(targetUsd)}</span> <small>${pct(phase.profit_target_pct)}</small>` : `<span class="v state-off">—</span>`,
+    targetUsd != null ? 'Para pasar esta fase.' : 'Cuenta fondeada, sin target.'));
+  cards.push(card('Días mín. de trading', `<span class="v">${phase.min_trading_days || '—'}</span>`,
+    phase.min_trading_days ? 'No cierra la fase antes de cumplirlos.' : 'Sin mínimo.'));
+
+  const C = R.consistency || {};
+  if (C.enabled) cards.push(card('Consistency' + vbadge(C), `<span class="v amber">${C.cap_pct!=null?pct(C.cap_pct):'sí'}</span>`,
+    C.cap_pct!=null ? `Tu mejor día no puede pasar el ${pct(C.cap_pct)} del total.` : (C._note||'Regla de consistencia activa.')));
+  else cards.push(card('Consistency', `<span class="v state-off">No aplica</span>`, 'Sin regla de consistencia.'));
+
+  const Q = R.quick_strike || {};
+  if (Q.enabled) cards.push(card('Quick Strike', `<span class="v amber">warn ${pct(Q.warn_pct)} · breach ${pct(Q.breach_pct)}</span>`,
+    `Trades <${Q.window_sec}s. El bot retrasa el TP +${Q.window_sec}s para que ningún cierre cuente.`));
+  else cards.push(card('Quick Strike' + vbadge(Q), `<span class="v state-off">No aplica</span>`, 'Sin penalización a trades ultrarrápidos.'));
+
+  const N = R.news_blackout || {};
+  if (N.enabled) cards.push(card('Blackout noticias' + vbadge(N), `<span class="v amber">±${N.minutes_around} min</span>`,
+    'No abre ni cierra cerca de noticias de alto impacto.'));
+  else cards.push(card('Blackout noticias' + vbadge(N), `<span class="v state-off">Permitido</span>`, 'Trading en noticias permitido.'));
+
+  if (R.leverage_real) cards.push(card('Leverage real' + vbadge(R.leverage_real), `<span class="v">1:${R.leverage_real.indices}</span>`,
+    'En índices. El sizing valida margen real.'));
+
+  const proh = R.prohibited_strategies || [];
+  cards.push(`<div class="card wide"><div class="k">Estrategias prohibidas — el bot nunca las usa</div>
+    <div class="chips">${proh.map(s => `<span class="chip">${s}</span>`).join('')}</div></div>`);
+
+  cards.push(platformsCard(f));
+  $('cards').innerHTML = cards.join('');
+}
+
+function card(k, v, d) { return `<div class="card"><div class="k">${k}</div><div>${v}</div><div class="d">${d}</div></div>`; }
+
+function platformsCard(f) {
+  const t = (RULES._meta && RULES._meta.enforcement_tiers) || {};
+  const full = t.full || [], planned = t.planned || [];
+  const chips = (f.platforms || []).map(p => {
+    const base = p.split(' ')[0];
+    let cls = 'chip-mon', tag = 'solo monitoreo';
+    if (full.includes(base)) { cls = 'chip-full'; tag = 'enforcement'; }
+    else if (planned.includes(base)) { cls = 'chip-plan'; tag = 'pronto'; }
+    else if (f.type === 'futures') { cls = 'chip-fut'; tag = 'futuros'; }
+    return `<span class="pchip ${cls}">${p}<small> · ${tag}</small></span>`;
+  }).join('');
+  return `<div class="card wide"><div class="k">Plataformas de la firma · nivel de enforcement de PropGuard</div><div class="chips" style="margin-top:.5rem">${chips}</div></div>`;
+}
+
+$('firm').addEventListener('change', fillPhaseSize);
+$('phase').addEventListener('change', render);
+$('size').addEventListener('change', render);
+boot();
+</script>
+</body>
+</html>

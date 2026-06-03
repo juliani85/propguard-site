@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prop Rule Checker — Quick Strike & Consistency | no pierdas tu cuenta por un tecnicismo</title>
+<meta name="description" content="Calculá en segundos tu Quick Strike % y tu Consistency % antes de que la prop firm te termine la cuenta. Gratis, sin registro.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0b0d12;
+    --surface: #151922;
+    --surface-2: #1d222e;
+    --line: #2a3140;
+    --txt: #e9edf4;
+    --txt-dim: #8b94a7;
+    --green: #22c55e;
+    --amber: #f59e0b;
+    --red: #ef4444;
+    --accent: #5b8cff;
+    --radius: 14px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Outfit', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--txt);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    padding: 0 1rem 4rem;
+  }
+  .wrap { max-width: 640px; margin: 0 auto; }
+
+  header { text-align: center; padding: 2.5rem 0 1.5rem; }
+  .brand { font-size: .82rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--accent); }
+  h1 { font-size: 1.7rem; font-weight: 800; margin: .6rem 0 .4rem; line-height: 1.2; }
+  .sub { color: var(--txt-dim); font-size: 1rem; max-width: 30rem; margin: 0 auto; }
+
+  .tabs { display: flex; gap: .5rem; background: var(--surface); padding: .4rem; border-radius: var(--radius); margin: 1.5rem 0; }
+  .tab {
+    flex: 1; padding: .8rem; border: 0; border-radius: 10px; cursor: pointer;
+    background: transparent; color: var(--txt-dim); font-family: inherit;
+    font-weight: 600; font-size: .95rem; transition: all .15s;
+  }
+  .tab[aria-selected="true"] { background: var(--surface-2); color: var(--txt); box-shadow: 0 1px 4px rgba(0,0,0,.3); }
+
+  .panel { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 1.4rem; }
+  .panel[hidden] { display: none; }
+  .panel h2 { font-size: 1.15rem; font-weight: 700; margin-bottom: .3rem; }
+  .panel .hint { color: var(--txt-dim); font-size: .9rem; margin-bottom: 1.2rem; }
+
+  /* Gauge */
+  .gauge { text-align: center; margin: 1.5rem 0; }
+  .gauge .num { font-size: 3.2rem; font-weight: 800; line-height: 1; transition: color .2s; }
+  .gauge .lbl { font-size: .85rem; color: var(--txt-dim); text-transform: uppercase; letter-spacing: .08em; margin-top: .3rem; }
+  .gauge .status { display: inline-block; margin-top: .8rem; padding: .35rem .9rem; border-radius: 99px; font-weight: 700; font-size: .85rem; }
+  .bar { height: 12px; border-radius: 99px; background: var(--surface-2); margin: 1.2rem 0 .4rem; position: relative; overflow: hidden; }
+  .bar > span { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 99px; transition: width .25s, background .25s; }
+  .ticks { display: flex; justify-content: space-between; font-size: .72rem; color: var(--txt-dim); }
+  .ok { color: var(--green); } .warn { color: var(--amber); } .bad { color: var(--red); }
+  .bg-ok { background: var(--green); } .bg-warn { background: var(--amber); } .bg-bad { background: var(--red); }
+  .chip-ok { background: rgba(34,197,94,.15); color: var(--green); }
+  .chip-warn { background: rgba(245,158,11,.15); color: var(--amber); }
+  .chip-bad { background: rgba(239,68,68,.15); color: var(--red); }
+
+  /* Rows */
+  .rows { display: flex; flex-direction: column; gap: .5rem; margin: 1rem 0; }
+  .row { display: grid; grid-template-columns: 1fr 1fr auto; gap: .5rem; align-items: center; }
+  .row.head { font-size: .78rem; color: var(--txt-dim); text-transform: uppercase; letter-spacing: .05em; padding: 0 .2rem; }
+  .row.head span:last-child { width: 38px; }
+  input[type="number"] {
+    width: 100%; padding: .7rem .8rem; background: var(--surface-2); border: 1px solid var(--line);
+    border-radius: 9px; color: var(--txt); font-family: inherit; font-size: .95rem;
+  }
+  input:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+  .del { width: 38px; height: 38px; border: 0; border-radius: 9px; background: var(--surface-2); color: var(--txt-dim); cursor: pointer; font-size: 1.1rem; }
+  .del:hover { background: rgba(239,68,68,.15); color: var(--red); }
+  .add { width: 100%; padding: .75rem; margin-top: .3rem; border: 1px dashed var(--line); border-radius: 9px; background: transparent; color: var(--txt-dim); font-family: inherit; font-weight: 600; cursor: pointer; }
+  .add:hover { border-color: var(--accent); color: var(--accent); }
+
+  .field { margin: 1rem 0; }
+  .field label { display: block; font-size: .85rem; color: var(--txt-dim); margin-bottom: .4rem; }
+  .field-row { display: flex; gap: .6rem; align-items: center; }
+  .field-row input { max-width: 160px; }
+
+  .explain { background: var(--surface-2); border-radius: 10px; padding: .9rem 1rem; font-size: .88rem; color: var(--txt-dim); margin-top: 1rem; }
+  .explain strong { color: var(--txt); }
+
+  /* CTA */
+  .cta { margin-top: 1.5rem; background: linear-gradient(135deg, #1a2333, #151922); border: 1px solid var(--line); border-radius: var(--radius); padding: 1.6rem; text-align: center; }
+  .cta h3 { font-size: 1.2rem; font-weight: 800; margin-bottom: .5rem; }
+  .cta p { color: var(--txt-dim); font-size: .95rem; margin-bottom: 1.1rem; }
+  .cta form { display: flex; gap: .5rem; max-width: 420px; margin: 0 auto; }
+  .cta input { flex: 1; padding: .8rem 1rem; background: var(--surface-2); border: 1px solid var(--line); border-radius: 10px; color: var(--txt); font-family: inherit; }
+  .cta button { padding: .8rem 1.3rem; border: 0; border-radius: 10px; background: var(--accent); color: #fff; font-family: inherit; font-weight: 700; cursor: pointer; white-space: nowrap; }
+  .cta button:hover { filter: brightness(1.1); }
+  .cta .ok-msg { color: var(--green); font-weight: 600; margin-top: .8rem; }
+
+  footer { text-align: center; color: var(--txt-dim); font-size: .8rem; margin-top: 2.5rem; }
+  footer a { color: var(--txt-dim); }
+
+  @media (max-width: 480px) {
+    h1 { font-size: 1.4rem; }
+    .cta form { flex-direction: column; }
+    .gauge .num { font-size: 2.6rem; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand">Prop Rule Checker</div>
+    <h1>No pierdas tu cuenta por un tecnicismo</h1>
+    <p class="sub">Calculá tu <strong>Quick Strike&nbsp;%</strong> y tu <strong>Consistency&nbsp;%</strong> antes de que la prop firm lo haga por vos. Gratis, sin registro.</p>
+  </header>
+
+  <div class="tabs" role="tablist" aria-label="Calculadoras">
+    <button class="tab" role="tab" id="tab-qs" aria-selected="true" aria-controls="panel-qs">Quick Strike</button>
+    <button class="tab" role="tab" id="tab-cons" aria-selected="false" aria-controls="panel-cons">Consistency</button>
+  </div>
+
+  <!-- QUICK STRIKE -->
+  <section class="panel" id="panel-qs" role="tabpanel" aria-labelledby="tab-qs">
+    <h2>Quick Strike&nbsp;%</h2>
+    <p class="hint">Trades cerrados en menos de 30 segundos. Se calcula sobre el profit de tus trades ganadores. Warning al 20%, cuenta terminada al 30%.</p>
+
+    <div class="gauge">
+      <div class="num" id="qs-num" aria-live="polite">0%</div>
+      <div class="lbl">de tu profit viene de trades &lt;30s</div>
+      <div class="bar"><span id="qs-bar" style="width:0%"></span></div>
+      <div class="ticks"><span>0%</span><span class="warn">20% warning</span><span class="bad">30% breach</span><span>40%+</span></div>
+      <div class="status chip-ok" id="qs-status">Sin datos</div>
+    </div>
+
+    <div class="rows" id="qs-rows">
+      <div class="row head"><span>Profit ($)</span><span>Duración (seg)</span><span></span></div>
+    </div>
+    <button class="add" id="qs-add" type="button">+ Agregar trade</button>
+
+    <div class="explain">
+      <strong>Cómo se calcula:</strong> sumo el profit de tus trades <em>ganadores</em> que cerraron en menos de 30&nbsp;s y lo divido por el profit total de todos tus ganadores. Las pérdidas no cuentan.
+    </div>
+  </section>
+
+  <!-- CONSISTENCY -->
+  <section class="panel" id="panel-cons" role="tabpanel" aria-labelledby="tab-cons" hidden>
+    <h2>Consistency&nbsp;%</h2>
+    <p class="hint">Tu mejor día no puede superar cierto % del profit total / target. Default 40% (FundedNext Legacy). Ajustá según tu firma.</p>
+
+    <div class="gauge">
+      <div class="num" id="cons-num" aria-live="polite">0%</div>
+      <div class="lbl">tu mejor día sobre el profit total</div>
+      <div class="bar"><span id="cons-bar" style="width:0%"></span></div>
+      <div class="ticks"><span>0%</span><span id="cons-thr-lbl" class="bad">40% límite</span><span>100%</span></div>
+      <div class="status chip-ok" id="cons-status">Sin datos</div>
+    </div>
+
+    <div class="field">
+      <label for="cons-thr">Límite de consistencia de tu firma (%)</label>
+      <div class="field-row">
+        <input type="number" id="cons-thr" value="40" min="1" max="100" step="1">
+        <span style="color:var(--txt-dim);font-size:.85rem">40% FundedNext · 30-50% según firma</span>
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="cons-target">Profit target del challenge ($) — opcional</label>
+      <div class="field-row">
+        <input type="number" id="cons-target" placeholder="ej. 3000" min="0" step="any">
+      </div>
+    </div>
+
+    <div class="rows" id="cons-rows">
+      <div class="row head"><span>Profit del día ($)</span><span></span><span></span></div>
+    </div>
+    <button class="add" id="cons-add" type="button">+ Agregar día</button>
+
+    <div class="explain" id="cons-explain">
+      <strong>Cómo se calcula:</strong> tu mejor día dividido por el profit total. Si supera el límite y cargaste un target, te muestro a cuánto te lo recalcularían: <em>mejor día / 0,40</em>.
+    </div>
+  </section>
+
+  <!-- CTA waitlist -->
+  <div class="cta">
+    <h3>¿Y si en vez de avisarte, te frenara solo?</h3>
+    <p>Esto te muestra dónde estás. La versión completa corre en tu MT5, vigila <strong>todas tus cuentas</strong> a la vez y te <strong>cierra o bloquea</strong> antes de romper cualquier regla. Dejá tu mail para el acceso anticipado.</p>
+    <form id="wait-form">
+      <input type="email" id="wait-email" placeholder="tu@email.com" required aria-label="Tu email">
+      <button type="submit">Quiero el acceso</button>
+    </form>
+    <p class="ok-msg" id="wait-ok" hidden>Listo, te avisamos. 🙌</p>
+  </div>
+
+  <footer>
+    Hecho por un prop trader que se cansó de quemar cuentas por reglas que no veía.<br>
+    Estimación orientativa — el cálculo oficial lo hace tu firma.
+  </footer>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  // ---------- Tabs ----------
+  const tabs = document.querySelectorAll('.tab');
+  tabs.forEach(t => t.addEventListener('click', () => {
+    tabs.forEach(x => x.setAttribute('aria-selected', 'false'));
+    t.setAttribute('aria-selected', 'true');
+    document.getElementById('panel-qs').hidden = (t.id !== 'tab-qs');
+    document.getElementById('panel-cons').hidden = (t.id !== 'tab-cons');
+  }));
+
+  // ---------- Helpers ----------
+  function fmtPct(x) { return (Math.round(x * 10) / 10) + '%'; }
+  function setStatus(el, cls, txt) {
+    el.className = 'status ' + cls;
+    el.textContent = txt;
+  }
+  function barClass(p, warn, bad) {
+    if (p >= bad) return 'bg-bad';
+    if (p >= warn) return 'bg-warn';
+    return 'bg-ok';
+  }
+
+  // ---------- Quick Strike ----------
+  const qsRows = document.getElementById('qs-rows');
+  function addQsRow(profit, dur) {
+    const row = document.createElement('div');
+    row.className = 'row';
+    row.innerHTML =
+      '<input type="number" class="qs-profit" placeholder="ej. 120" step="any" aria-label="Profit del trade">' +
+      '<input type="number" class="qs-dur" placeholder="ej. 18" step="any" min="0" aria-label="Duración en segundos">' +
+      '<button class="del" type="button" aria-label="Borrar fila">×</button>';
+    qsRows.appendChild(row);
+    if (profit != null) row.querySelector('.qs-profit').value = profit;
+    if (dur != null) row.querySelector('.qs-dur').value = dur;
+    row.querySelectorAll('input').forEach(i => i.addEventListener('input', calcQs));
+    row.querySelector('.del').addEventListener('click', () => { row.remove(); calcQs(); });
+  }
+  function calcQs() {
+    let qsProfit = 0, totalWin = 0;
+    document.querySelectorAll('#qs-rows .row:not(.head)').forEach(r => {
+      const p = parseFloat(r.querySelector('.qs-profit').value);
+      const d = parseFloat(r.querySelector('.qs-dur').value);
+      if (isNaN(p) || p <= 0) return;        // solo ganadores
+      totalWin += p;
+      if (!isNaN(d) && d < 30) qsProfit += p;
+    });
+    const pct = totalWin > 0 ? (qsProfit / totalWin) * 100 : 0;
+    document.getElementById('qs-num').textContent = fmtPct(pct);
+    const bar = document.getElementById('qs-bar');
+    bar.style.width = Math.min(pct, 100) + '%';
+    bar.className = barClass(pct, 20, 30);
+    const num = document.getElementById('qs-num');
+    const st = document.getElementById('qs-status');
+    num.className = 'num ' + (pct >= 30 ? 'bad' : pct >= 20 ? 'warn' : 'ok');
+    if (totalWin === 0) setStatus(st, 'chip-ok', 'Sin datos');
+    else if (pct >= 30) setStatus(st, 'chip-bad', '⛔ Breach — cuenta en riesgo de terminación');
+    else if (pct >= 20) setStatus(st, 'chip-warn', '⚠ Warning — rebalanceá ya');
+    else setStatus(st, 'chip-ok', '✓ Dentro de límites');
+  }
+
+  // ---------- Consistency ----------
+  const consRows = document.getElementById('cons-rows');
+  function addConsRow(profit) {
+    const row = document.createElement('div');
+    row.className = 'row';
+    row.innerHTML =
+      '<input type="number" class="cons-day" placeholder="ej. 450" step="any" aria-label="Profit del día">' +
+      '<span></span>' +
+      '<button class="del" type="button" aria-label="Borrar fila">×</button>';
+    consRows.appendChild(row);
+    if (profit != null) row.querySelector('.cons-day').value = profit;
+    row.querySelector('.cons-day').addEventListener('input', calcCons);
+    row.querySelector('.del').addEventListener('click', () => { row.remove(); calcCons(); });
+  }
+  function calcCons() {
+    const thr = parseFloat(document.getElementById('cons-thr').value) || 40;
+    const target = parseFloat(document.getElementById('cons-target').value);
+    document.getElementById('cons-thr-lbl').textContent = thr + '% límite';
+    let total = 0, best = 0;
+    document.querySelectorAll('#cons-rows .row:not(.head)').forEach(r => {
+      const p = parseFloat(r.querySelector('.cons-day').value);
+      if (isNaN(p)) return;
+      total += p;
+      if (p > best) best = p;
+    });
+    const pct = total > 0 ? (best / total) * 100 : 0;
+    document.getElementById('cons-num').textContent = fmtPct(pct);
+    const bar = document.getElementById('cons-bar');
+    bar.style.width = Math.min(pct, 100) + '%';
+    bar.className = barClass(pct, thr * 0.75, thr);
+    const num = document.getElementById('cons-num');
+    num.className = 'num ' + (pct >= thr ? 'bad' : pct >= thr * 0.75 ? 'warn' : 'ok');
+    const st = document.getElementById('cons-status');
+    const ex = document.getElementById('cons-explain');
+    if (total <= 0) { setStatus(st, 'chip-ok', 'Sin datos'); return; }
+    if (pct >= thr) {
+      setStatus(st, 'chip-bad', '⛔ Tu mejor día supera el ' + thr + '%');
+      let msg = '<strong>Tu mejor día ($' + best.toLocaleString() + ') es el ' + fmtPct(pct) + ' del total.</strong> ';
+      if (!isNaN(target) && target > 0) {
+        const newTarget = best / (thr / 100);
+        msg += 'Si tu firma recalcula, el nuevo target sería ~<strong>$' + Math.round(newTarget).toLocaleString() + '</strong> (era $' + target.toLocaleString() + '). Seguí operando para diluir ese día.';
+      } else {
+        msg += 'Cargá tu profit target arriba para ver a cuánto te lo recalcularían.';
+      }
+      ex.innerHTML = msg;
+    } else if (pct >= thr * 0.75) {
+      setStatus(st, 'chip-warn', '⚠ Cerca del límite del ' + thr + '%');
+      ex.innerHTML = '<strong>Vas bien pero atento:</strong> tu mejor día es el ' + fmtPct(pct) + ' del total. Mantené días parejos para no acercarte al ' + thr + '%.';
+    } else {
+      setStatus(st, 'chip-ok', '✓ Consistente');
+      ex.innerHTML = '<strong>Bien repartido:</strong> tu mejor día es solo el ' + fmtPct(pct) + ' del total. Lejos del límite del ' + thr + '%.';
+    }
+  }
+  document.getElementById('cons-thr').addEventListener('input', calcCons);
+  document.getElementById('cons-target').addEventListener('input', calcCons);
+
+  // ---------- Buttons ----------
+  document.getElementById('qs-add').addEventListener('click', () => addQsRow());
+  document.getElementById('cons-add').addEventListener('click', () => addConsRow());
+
+  // ---------- Waitlist (placeholder — sin backend todavía) ----------
+  document.getElementById('wait-form').addEventListener('submit', e => {
+    e.preventDefault();
+    // TODO: conectar a Formspree / Mailchimp / backend propio
+    document.getElementById('wait-email').value = '';
+    document.getElementById('wait-ok').hidden = false;
+  });
+
+  // ---------- Seed con ejemplos (landea en "warning" para mostrar el matiz) ----------
+  addQsRow(120, 15); addQsRow(300, 60); addQsRow(180, 90);   // QS 20% → warning
+  addConsRow(450); addConsRow(380); addConsRow(520); addConsRow(610); // best 610/1960 ≈ 31% → warning
+  calcQs(); calcCons();
+})();
+</script>
+</body>
+</html>

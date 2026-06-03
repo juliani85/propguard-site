@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PropGuard — tu cuenta no se muere por una regla que no viste</title>
+<meta name="description" content="El guardián que corre con TU estrategia y te frena antes de romper cualquier regla de tu prop firm. 12 firmas. MT5. Pago en cripto. No te prometo ganar — te aseguro no morir por un tecnicismo.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;700;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:#0a0a0b; --ink:#08080a; --card:#131316; --line:#26262c;
+    --txt:#f2f3f5; --dim:#85858f;
+    --lime:#c6f135; --lime-dim:#9bbf1f; --amber:#ff5c1a; --red:#ff3b3b;
+    --mono:'JetBrains Mono',ui-monospace,monospace; --disp:'Outfit',system-ui,sans-serif;
+  }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  html { scroll-behavior:smooth; }
+  body { font-family:var(--disp); background:var(--bg); color:var(--txt); line-height:1.55; -webkit-font-smoothing:antialiased; overflow-x:hidden; }
+  .wrap { max-width:960px; margin:0 auto; padding:0 1.3rem; }
+  a { color:var(--lime); text-decoration:none; }
+  .mono { font-family:var(--mono); }
+
+  /* caution tape */
+  .tape { height:14px; background:repeating-linear-gradient(45deg,#0a0a0b,#0a0a0b 14px,var(--amber) 14px,var(--amber) 28px); opacity:.9; }
+
+  /* nav */
+  nav { display:flex; align-items:center; justify-content:space-between; padding:1.2rem 0; }
+  .logo { font-family:var(--mono); font-weight:700; font-size:1.05rem; letter-spacing:-.02em; }
+  .logo b { color:var(--lime); }
+  .navlinks a { color:var(--dim); font-size:.9rem; margin-left:1.3rem; font-weight:600; }
+  .navlinks a:hover { color:var(--txt); }
+
+  /* hero */
+  .hero { padding:3.5rem 0 3rem; display:grid; grid-template-columns:1.15fr .85fr; gap:2.5rem; align-items:center; }
+  .kicker { font-family:var(--mono); font-size:.78rem; color:var(--lime); letter-spacing:.12em; text-transform:uppercase; }
+  h1 { font-size:3.3rem; font-weight:900; line-height:.98; letter-spacing:-.03em; margin:1rem 0; }
+  h1 .hl { color:var(--lime); }
+  h1 .strike { color:var(--dim); text-decoration:line-through; text-decoration-color:var(--red); }
+  .hero p { color:var(--dim); font-size:1.12rem; max-width:34rem; }
+  .cta-row { display:flex; gap:.7rem; flex-wrap:wrap; margin-top:1.8rem; }
+  .btn { font-family:var(--disp); font-weight:800; font-size:1rem; padding:.9rem 1.6rem; border-radius:10px; border:0; cursor:pointer; transition:transform .08s; }
+  .btn:active { transform:translateY(1px); }
+  .btn-lime { background:var(--lime); color:#0a0a0b; }
+  .btn-lime:hover { box-shadow:0 0 0 3px rgba(198,241,53,.25); }
+  .btn-out { background:transparent; color:var(--txt); border:1px solid var(--line); }
+  .undertag { font-family:var(--mono); font-size:.78rem; color:var(--dim); margin-top:1rem; }
+
+  /* HUD widget */
+  .hud { background:var(--ink); border:1px solid var(--line); border-radius:16px; padding:1.2rem; font-family:var(--mono); box-shadow:0 30px 60px -30px rgba(0,0,0,.8); }
+  .hud .top { display:flex; justify-content:space-between; font-size:.72rem; color:var(--dim); border-bottom:1px solid var(--line); padding-bottom:.7rem; margin-bottom:.9rem; }
+  .hud .acct { font-size:.95rem; color:var(--txt); font-weight:600; }
+  .hud .badge { color:var(--lime); font-weight:700; display:flex; align-items:center; gap:.4rem; }
+  .hud .dot { width:8px; height:8px; border-radius:50%; background:var(--lime); box-shadow:0 0 8px var(--lime); animation:pulse 1.6s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.35} }
+  .meter { margin:.7rem 0; }
+  .meter .lbl { display:flex; justify-content:space-between; font-size:.74rem; color:var(--dim); margin-bottom:.3rem; }
+  .meter .bar { height:7px; background:#1e1e22; border-radius:5px; overflow:hidden; }
+  .meter .bar > i { display:block; height:100%; border-radius:5px; }
+  .g{background:var(--lime)} .a{background:var(--amber)} .r{background:var(--red)}
+
+  /* sections */
+  section { padding:3.2rem 0; border-top:1px solid var(--line); }
+  .seclabel { font-family:var(--mono); font-size:.78rem; color:var(--lime); letter-spacing:.1em; text-transform:uppercase; }
+  h2 { font-size:2rem; font-weight:900; letter-spacing:-.02em; margin:.5rem 0 1.5rem; line-height:1.05; }
+
+  /* kill list */
+  .kill { display:grid; grid-template-columns:1fr 1fr; gap:.8rem; }
+  .killrow { background:var(--card); border:1px solid var(--line); border-left:3px solid var(--red); border-radius:10px; padding:1rem 1.1rem; }
+  .killrow .r { font-family:var(--mono); font-size:.75rem; color:var(--red); text-transform:uppercase; letter-spacing:.05em; }
+  .killrow p { color:var(--dim); font-size:.92rem; margin-top:.3rem; }
+
+  /* steps */
+  .steps { counter-reset:s; display:grid; grid-template-columns:repeat(3,1fr); gap:1rem; }
+  .stp { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:1.3rem; position:relative; }
+  .stp::before { counter-increment:s; content:"0" counter(s); font-family:var(--mono); font-size:1.6rem; font-weight:700; color:var(--lime); }
+  .stp h3 { font-size:1.05rem; margin:.4rem 0 .3rem; }
+  .stp p { color:var(--dim); font-size:.9rem; }
+
+  /* firms ticker */
+  .firms { display:flex; flex-wrap:wrap; gap:.5rem; }
+  .fchip { font-family:var(--mono); font-size:.85rem; background:var(--card); border:1px solid var(--line); border-radius:8px; padding:.45rem .85rem; color:var(--txt); }
+  .fchip.fut { color:var(--amber); }
+
+  /* pricing crypto */
+  .plans { display:grid; grid-template-columns:repeat(3,1fr); gap:1rem; }
+  .plan { background:var(--card); border:1px solid var(--line); border-radius:14px; padding:1.6rem; }
+  .plan.feat { border-color:var(--lime); box-shadow:0 0 0 1px var(--lime); }
+  .plan .pn { font-family:var(--mono); font-size:.8rem; color:var(--dim); text-transform:uppercase; letter-spacing:.06em; }
+  .plan .amt { font-size:2.2rem; font-weight:900; margin:.3rem 0; }
+  .plan .amt small { font-size:.9rem; color:var(--dim); font-weight:600; font-family:var(--mono); }
+  .plan ul { list-style:none; margin:1rem 0; font-size:.9rem; }
+  .plan li { padding:.28rem 0; color:var(--dim); }
+  .plan li::before { content:"›"; color:var(--lime); font-weight:800; margin-right:.5rem; }
+  .usdt { font-family:var(--mono); font-size:.78rem; color:var(--lime); background:rgba(198,241,53,.1); border:1px solid rgba(198,241,53,.3); border-radius:7px; padding:.25rem .6rem; display:inline-block; }
+
+  /* tools */
+  .tools { display:grid; grid-template-columns:repeat(3,1fr); gap:1rem; }
+  .tool { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:1.2rem; }
+  .tool .free { font-family:var(--mono); font-size:.68rem; color:var(--lime); }
+  .tool h3 { font-size:1rem; margin:.3rem 0; }
+  .tool p { color:var(--dim); font-size:.86rem; margin-bottom:.7rem; }
+
+  /* faq */
+  details { background:var(--card); border:1px solid var(--line); border-radius:10px; padding:1rem 1.2rem; margin-bottom:.6rem; }
+  summary { font-weight:700; cursor:pointer; }
+  details p { color:var(--dim); font-size:.92rem; margin-top:.6rem; }
+
+  /* origin / quote */
+  .quote { border-left:3px solid var(--lime); padding:.4rem 0 .4rem 1.4rem; font-size:1.3rem; font-weight:700; line-height:1.3; }
+  .quote span { color:var(--lime); }
+
+  /* waitlist */
+  .wl { text-align:center; }
+  .wl form { display:flex; gap:.5rem; max-width:460px; margin:1.2rem auto 0; }
+  .wl input { flex:1; padding:.9rem 1rem; background:var(--ink); border:1px solid var(--line); border-radius:10px; color:var(--txt); font-family:var(--mono); }
+  .okmsg { color:var(--lime); font-family:var(--mono); margin-top:.8rem; }
+
+  footer { border-top:1px solid var(--line); padding:2.5rem 0; color:var(--dim); font-size:.82rem; font-family:var(--mono); line-height:1.8; }
+
+  @media (max-width:760px){
+    .hero{grid-template-columns:1fr; gap:1.8rem;}
+    h1{font-size:2.4rem;}
+    .kill,.steps,.plans,.tools{grid-template-columns:1fr;}
+    .navlinks{display:none;}
+    .wl form{flex-direction:column;}
+  }
+</style>
+</head>
+<body>
+<div class="tape"></div>
+<div class="wrap">
+
+  <nav>
+    <div class="logo">PROP<b>GUARD</b></div>
+    <div class="navlinks">
+      <a href="#como">Cómo</a>
+      <a href="#firmas">Firmas</a>
+      <a href="#precio">Precio</a>
+      <a href="compare.html">Comparador</a>
+      <a href="#wl">Acceso</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero" style="border:0">
+    <div>
+      <div class="kicker">// el guardián de tu cuenta fondeada</div>
+      <h1>Tu cuenta no muere por mala suerte.<br>Muere por <span class="strike">una regla</span> <span class="hl">que no viste.</span></h1>
+      <p>PropGuard corre con <b>tu</b> estrategia y te frena en seco antes de tocar cualquier límite de tu prop firm. Daily loss, drawdown, consistency, quick strike, news. Vos tradeás. Él vigila.</p>
+      <div class="cta-row">
+        <button class="btn btn-lime" onclick="document.getElementById('wl').scrollIntoView()">Quiero el acceso anticipado</button>
+        <a class="btn btn-out" href="rules-engine.html">Ver mis reglas →</a>
+      </div>
+      <div class="undertag">// 12 firmas · MT5 · pago en USDT · sin compartir credenciales</div>
+    </div>
+
+    <!-- HUD mock -->
+    <div class="hud">
+      <div class="top"><span>PROPGUARD · LIVE</span><span class="badge"><span class="dot"></span>PROTEGIDO</span></div>
+      <div class="acct">FundedNext · $50,000 · Phase 1</div>
+      <div class="meter"><div class="lbl"><span>Pérdida diaria</span><span>$420 / $2.500</span></div><div class="bar"><i class="g" style="width:17%"></i></div></div>
+      <div class="meter"><div class="lbl"><span>Drawdown total</span><span>$1.1k / $5.000</span></div><div class="bar"><i class="g" style="width:22%"></i></div></div>
+      <div class="meter"><div class="lbl"><span>Quick Strike</span><span>8% / 30%</span></div><div class="bar"><i class="g" style="width:27%"></i></div></div>
+      <div class="meter"><div class="lbl"><span>Consistency</span><span>no aplica (CFD)</span></div><div class="bar"><i class="g" style="width:0%"></i></div></div>
+      <div class="mono" style="font-size:.72rem;color:var(--dim);border-top:1px solid var(--line);padding-top:.7rem;margin-top:.3rem">› auto-close armado al 90% · 0 violaciones hoy</div>
+    </div>
+  </section>
+
+  <!-- KILL LIST -->
+  <section>
+    <div class="seclabel">// lo que mata cuentas</div>
+    <h2>No es tu análisis. Es la letra chica.</h2>
+    <div class="kill">
+      <div class="killrow"><div class="r">Daily loss</div><p>Un mal día y cruzás el límite diario por equity. Cuenta muerta.</p></div>
+      <div class="killrow"><div class="r">Quick Strike</div><p>Cerraste con ganancia en menos de 30s demasiadas veces. Profit confiscado.</p></div>
+      <div class="killrow"><div class="r">Consistency</div><p>Un día fue "demasiado bueno". Te recalculan el target o te frenan el payout.</p></div>
+      <div class="killrow"><div class="r">News</div><p>Operaste 90 segundos antes de un dato. 34% lo viola sin querer.</p></div>
+    </div>
+    <p style="color:var(--dim);margin-top:1.2rem;font-size:.95rem">PropGuard conoce estas reglas para cada firma — y te frena <b style="color:var(--txt)">antes</b>, no después.</p>
+  </section>
+
+  <!-- COMO -->
+  <section id="como">
+    <div class="seclabel">// cómo funciona</div>
+    <h2>Tres pasos. Cero estrategia que compartir.</h2>
+    <div class="steps">
+      <div class="stp"><h3>Conectás tu MT5</h3><p>Corre local sobre tu terminal ya logueado. Tus credenciales nunca salen de tu máquina.</p></div>
+      <div class="stp"><h3>Elegís firma + tamaño</h3><p>Carga solo todos los límites de esa firma, en dólares, sobre tu cuenta.</p></div>
+      <div class="stp"><h3>Tradeás tranquilo</h3><p>Corrés lo tuyo. Si te acercás a un límite, cierra y bloquea. Vos mirás el HUD.</p></div>
+    </div>
+  </section>
+
+  <!-- FIRMAS -->
+  <section id="firmas">
+    <div class="seclabel">// cobertura</div>
+    <h2>12 firmas. Tus reglas, no las genéricas.</h2>
+    <div class="firms" id="firms"></div>
+    <p style="margin-top:1.2rem"><a href="compare.html">› Comparar todas lado a lado</a></p>
+  </section>
+
+  <!-- ORIGEN -->
+  <section>
+    <div class="seclabel">// por qué existe</div>
+    <div class="quote">"Soy prop trader. Casi quemo una cuenta por la Quick Strike sin entenderla. Automaticé la protección para mí. <span>No te vendo una estrategia — protejo la que ya tenés.</span>"</div>
+    <p style="color:var(--dim);margin-top:1rem;font-size:.95rem">No te prometo que ganes. Te aseguro que no pierdas la cuenta por algo que no viste venir.</p>
+  </section>
+
+  <!-- PRECIO -->
+  <section id="precio">
+    <div class="seclabel">// precio · pago en cripto</div>
+    <h2>Menos que un challenge quemado.</h2>
+    <div class="plans">
+      <div class="plan">
+        <div class="pn">Radar</div>
+        <div class="amt">Gratis</div>
+        <ul><li>Monitoreo + alertas</li><li>Calculadora + comparador</li><li>Ves qué tan cerca estás</li></ul>
+        <button class="btn btn-out" style="width:100%" onclick="document.getElementById('wl').scrollIntoView()">Empezar</button>
+      </div>
+      <div class="plan feat">
+        <div class="pn">Guardian</div>
+        <div class="amt">19<small> USDT/mes</small></div>
+        <ul><li>Enforcement activo (te frena)</li><li>1 cuenta · 12 firmas</li><li>Updates de reglas</li><li>License key al instante</li></ul>
+        <button class="btn btn-lime" style="width:100%" onclick="buy('guardian')">Comprar (USDT)</button>
+        <div style="margin-top:.7rem"><span class="usdt">pago en cripto · USDT</span></div>
+      </div>
+      <div class="plan">
+        <div class="pn">Pro · Unlimited</div>
+        <div class="amt">39<small> USDT/mes</small></div>
+        <ul><li>3 cuentas (39) / ∞ (79)</li><li>Carteras multi-firma</li><li>Todo lo de Guardian</li></ul>
+        <button class="btn btn-out" style="width:100%" onclick="buy('pro')">Comprar Pro</button>
+      </div>
+    </div>
+    <p style="color:var(--dim);font-size:.82rem;margin-top:1rem;font-family:var(--mono)">// solo cripto (USDT). Sin tarjeta, sin banco, sin papeleo. Precios de early access.</p>
+  </section>
+
+  <!-- TOOLS -->
+  <section>
+    <div class="seclabel">// probá gratis</div>
+    <h2>No nos creas. Probá.</h2>
+    <div class="tools">
+      <div class="tool"><div class="free">// gratis</div><h3>Calculadora Quick Strike</h3><p>¿Cerca del 30%? Calculalo en segundos.</p><a href="calc.html">Abrir →</a></div>
+      <div class="tool"><div class="free">// gratis</div><h3>Explorador de reglas</h3><p>Firma + tamaño → todos los límites.</p><a href="rules-engine.html">Abrir →</a></div>
+      <div class="tool"><div class="free">// gratis</div><h3>Comparador de firmas</h3><p>Las 12, lado a lado.</p><a href="compare.html">Abrir →</a></div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section>
+    <div class="seclabel">// preguntas</div>
+    <h2>Lo que vas a preguntar.</h2>
+    <details><summary>¿Me garantiza pasar el challenge?</summary><p>No. Nadie honesto te lo garantiza. PropGuard hace que <b style="color:var(--txt)">no pierdas la cuenta por romper una regla</b>. El resto es tu estrategia y el mercado.</p></details>
+    <details><summary>¿Incluye una estrategia?</summary><p>No, a propósito. Corrés la tuya — tu EA, tu bot o tu trading manual. Tu edge queda tuyo, no se comparte. Somos la capa de protección, no otro "EA que pasa challenges".</p></details>
+    <details><summary>¿Comparto mis credenciales?</summary><p>Nunca. Corre local sobre tu terminal MT5. Tu cuenta no sale de tu máquina.</p></details>
+    <details><summary>¿En qué plataformas anda?</summary><p>MT5 al lanzamiento (enforcement completo). cTrader en camino. DXtrade/Match-Trader posiblemente solo monitoreo. Te lo decimos claro por firma en el explorador.</p></details>
+    <details><summary>¿Por qué solo cripto?</summary><p>Rápido, global, sin banco de por medio. Pagás en USDT (TRC20/Polygon) y te llega la license key al instante.</p></details>
+  </section>
+
+  <!-- WAITLIST -->
+  <section id="wl" class="wl">
+    <div class="seclabel">// acceso anticipado</div>
+    <h2>Entrá antes que el resto.</h2>
+    <p style="color:var(--dim)">Dejá tu mail. Te avisamos cuando abra + descuento de early access. Cero spam.</p>
+    <form id="wl-form">
+      <input type="email" id="wl-email" placeholder="tu@email.com" required class="mono" aria-label="Tu email">
+      <button class="btn btn-lime" type="submit">Anotarme</button>
+    </form>
+    <p class="okmsg" id="wl-ok" hidden>› anotado. te avisamos.</p>
+  </section>
+
+</div>
+<footer>
+  <div class="wrap">
+    PROPGUARD · hecho por un trader, para traders.<br>
+    // reglas orientativas — el cumplimiento oficial lo define cada firma y su ToS. no afiliado a ninguna prop firm.
+  </div>
+</footer>
+<div class="tape"></div>
+
+<script>
+(async function(){
+  try {
+    const R = await (await fetch('rules.json')).json();
+    document.getElementById('firms').innerHTML = Object.values(R.firms).map(f =>
+      `<span class="fchip${f.type==='futures'?' fut':''}">${f.name}</span>`).join('');
+  } catch(e) {
+    document.getElementById('firms').innerHTML = ['FTMO','FundedNext','The5ers','FundingPips','E8','Alpha Capital','Goat','Blue Guardian','FTUK','Apex','Topstep','MyFundedFutures'].map(n=>`<span class="fchip">${n}</span>`).join('');
+  }
+})();
+document.getElementById('wl-form').addEventListener('submit', e => {
+  e.preventDefault();
+  document.getElementById('wl-email').value='';
+  document.getElementById('wl-ok').hidden=false;
+});
+
+// Compra: pide el mail y redirige al checkout de Binance Pay (server emite la key al pagar)
+const PG_SERVER = "https://propguard-server.onrender.com";
+function buy(plan){
+  const email = prompt("Tu email (ahí te llega la license key al pagar):");
+  if(!email || email.indexOf('@')<0) return;
+  window.location.href = `${PG_SERVER}/checkout?plan=${plan}&email=${encodeURIComponent(email)}`;
+}
+</script>
+</body>
+</html>

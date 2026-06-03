@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Comparador de prop firms 2026 — reglas lado a lado</title>
+<meta name="description" content="Compará las reglas de las prop firms más conocidas: daily loss, max drawdown, target, consistency, quick strike y news. Lado a lado.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root { --bg:#0b0d12; --surface:#151922; --surface-2:#1d222e; --line:#2a3140; --txt:#e9edf4; --txt-dim:#8b94a7; --green:#22c55e; --amber:#f59e0b; --red:#ef4444; --accent:#5b8cff; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:'Outfit',system-ui,sans-serif; background:var(--bg); color:var(--txt); -webkit-font-smoothing:antialiased; padding:0 1rem 4rem; }
+  .wrap { max-width:1000px; margin:0 auto; }
+  header { text-align:center; padding:2.5rem 0 1rem; }
+  .brand { font-size:.82rem; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:var(--accent); }
+  h1 { font-size:1.7rem; font-weight:800; margin:.6rem 0 .4rem; }
+  .sub { color:var(--txt-dim); font-size:1rem; max-width:34rem; margin:0 auto; }
+  .controls { display:flex; gap:.5rem; justify-content:center; flex-wrap:wrap; margin:1.2rem 0; }
+  .controls button { padding:.5rem 1rem; border:1px solid var(--line); border-radius:99px; background:var(--surface); color:var(--txt-dim); font-family:inherit; font-weight:600; font-size:.85rem; cursor:pointer; }
+  .controls button[aria-pressed="true"] { background:var(--accent); color:#fff; border-color:var(--accent); }
+  .tablewrap { overflow-x:auto; border:1px solid var(--line); border-radius:14px; }
+  table { border-collapse:collapse; width:100%; min-width:760px; font-size:.88rem; }
+  th, td { padding:.7rem .8rem; text-align:left; border-bottom:1px solid var(--line); white-space:nowrap; }
+  thead th { position:sticky; top:0; background:var(--surface-2); font-size:.72rem; text-transform:uppercase; letter-spacing:.05em; color:var(--txt-dim); z-index:1; }
+  tbody tr:hover { background:var(--surface); }
+  td.firm { font-weight:700; position:sticky; left:0; background:var(--bg); }
+  tbody tr:hover td.firm { background:var(--surface); }
+  .tag { font-size:.66rem; font-weight:700; text-transform:uppercase; padding:.1rem .4rem; border-radius:5px; margin-left:.35rem; }
+  .t-cfd { background:rgba(91,140,255,.15); color:var(--accent); }
+  .t-fut { background:rgba(245,158,11,.15); color:var(--amber); }
+  .conf { font-size:.64rem; font-weight:700; text-transform:uppercase; padding:.08rem .4rem; border-radius:5px; }
+  .conf-verified { background:rgba(34,197,94,.15); color:var(--green); }
+  .conf-draft { background:rgba(245,158,11,.15); color:var(--amber); }
+  .conf-stub { background:rgba(239,68,68,.15); color:#fca5a5; }
+  .yes { color:var(--amber); font-weight:700; } .no { color:var(--txt-dim); } .red { color:var(--red); } .green { color:var(--green); }
+  footer { text-align:center; color:var(--txt-dim); font-size:.8rem; margin-top:1.5rem; line-height:1.6; }
+  footer a { color:var(--accent); }
+  @media (max-width:560px){ h1{font-size:1.4rem;} }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand">Comparador de prop firms</div>
+    <h1>Las reglas de cada firma, lado a lado</h1>
+    <p class="sub">Daily loss, max drawdown, target, consistency, quick strike y news — todas las conocidas en una tabla.</p>
+  </header>
+
+  <div class="controls">
+    <button data-f="all" aria-pressed="true">Todas</button>
+    <button data-f="cfd" aria-pressed="false">CFD / Forex</button>
+    <button data-f="futures" aria-pressed="false">Futuros</button>
+  </div>
+
+  <div class="tablewrap">
+    <table>
+      <thead><tr>
+        <th>Firma</th><th>Daily loss</th><th>Max loss</th><th>Tipo DD</th>
+        <th>Target P1 / P2</th><th>Días mín</th><th>Consistency</th><th>Quick Strike</th><th>News</th><th>Confianza</th>
+      </tr></thead>
+      <tbody id="rows"></tbody>
+    </table>
+  </div>
+
+  <footer>
+    Valores orientativos de research (may-2026) — confirmar contra el ToS vigente de cada firma.<br>
+    <a href="rules-engine.html">→ Ver el detalle por firma + tamaño</a> · <a href="calc.html">→ Calculadora Quick Strike / Consistency</a>
+  </footer>
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+const pct = n => n==null ? '—' : (n*100).toFixed(n*100%1===0?0:1)+'%';
+let RULES=null, filter='all';
+
+async function boot(){
+  try { RULES = await (await fetch('rules.json')).json(); }
+  catch(e){ $('rows').innerHTML='<tr><td colspan="10">Abrí esta página por localhost (no file://).</td></tr>'; return; }
+  document.querySelectorAll('.controls button').forEach(b=>b.addEventListener('click',()=>{
+    filter=b.dataset.f;
+    document.querySelectorAll('.controls button').forEach(x=>x.setAttribute('aria-pressed', x===b));
+    render();
+  }));
+  render();
+}
+
+function firstLast(phases){
+  const vals = Object.values(phases||{}).filter(p=>p.profit_target_pct!=null).map(p=>p.profit_target_pct);
+  if(!vals.length) return '—';
+  return vals.length>1 ? pct(vals[0])+' / '+pct(vals[1]) : pct(vals[0]);
+}
+
+function render(){
+  const rows=[];
+  for(const [k,f] of Object.entries(RULES.firms)){
+    if(filter!=='all' && f.type!==filter) continue;
+    const isFut = f.type==='futures';
+    const tag = isFut?'<span class="tag t-fut">FUT</span>':'<span class="tag t-cfd">CFD</span>';
+
+    let daily, max, ddtype, target, mindays, cons, qs, news;
+    if(isFut && f.supported){
+      daily = f.daily_loss && f.daily_loss.enabled ? '<span class="yes">soft $</span>' : '<span class="no">no tiene</span>';
+      max = '<span class="red">trailing $</span>';
+      ddtype = f.drawdown_type==='trailing_intraday'?'trailing intradía':'trailing EOD';
+      // target del primer tamaño como referencia
+      const a0 = (f.accounts||[])[0];
+      target = a0 ? '$'+a0.target_usd.toLocaleString()+' ('+ '$'+a0.size/1000+'k)' : '—';
+      mindays='—';
+      cons = f.consistency && f.consistency.enabled ? '<span class="yes">'+pct(f.consistency.cap_pct)+'</span>' : '<span class="no">no</span>';
+      qs='<span class="no">—</span>';
+      news='<span class="no">—</span>';
+    } else if(isFut){
+      daily=max=ddtype=target=mindays=cons=qs=news='<span class="no">—</span>';
+    } else {
+      const L=f.limits||{}, R=f.rules||{};
+      daily = '<span class="red">'+pct(L.daily_loss_pct)+'</span>';
+      max = '<span class="red">'+pct(L.max_loss_pct)+'</span>';
+      ddtype = L.max_loss_type==='trailing'?'trailing':'static';
+      target = firstLast(f.phases);
+      const days = Object.values(f.phases||{}).map(p=>p.min_trading_days).filter(d=>d).sort((a,b)=>b-a)[0];
+      mindays = days?days:'—';
+      const C=R.consistency||{};
+      cons = C.enabled ? '<span class="yes">'+(C.cap_pct!=null?pct(C.cap_pct):'sí')+'</span>' : '<span class="no">no</span>';
+      const Q=R.quick_strike||{};
+      qs = Q.enabled ? '<span class="yes">'+(Q.window_sec||30)+'s</span>' : '<span class="no">no</span>';
+      const N=R.news_blackout||{};
+      news = N.enabled ? '<span class="yes">'+(N.minutes_around?'±'+N.minutes_around+'m':'sí')+'</span>' : '<span class="no">permitido</span>';
+    }
+
+    rows.push(`<tr>
+      <td class="firm">${f.name}${tag}</td>
+      <td>${daily}</td><td>${max}</td><td>${ddtype}</td>
+      <td>${target}</td><td>${mindays}</td><td>${cons}</td><td>${qs}</td><td>${news}</td>
+      <td><span class="conf conf-${f.confidence}">${({verified:'verif',draft:'research',stub:'stub'})[f.confidence]||f.confidence}</span></td>
+    </tr>`);
+  }
+  $('rows').innerHTML = rows.join('');
+}
+boot();
+</script>
+</body>
+</html>
