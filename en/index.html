@@ -300,6 +300,9 @@
 })();
 document.getElementById('wl-form').addEventListener('submit', e => {
   e.preventDefault();
+  const email = document.getElementById('wl-email').value.trim();
+  if(email.indexOf('@')<1){ document.getElementById('wl-email').focus(); return; }
+  fetch("https://propguard-server.onrender.com/waitlist", { method:'POST', body: email }).catch(()=>{});
   document.getElementById('wl-email').value='';
   document.getElementById('wl-ok').hidden=false;
 });
@@ -321,5 +324,6 @@ function goPay(){
 document.getElementById('buy-modal').addEventListener('click', e=>{ if(e.target.id==='buy-modal') closeBuy(); });
 document.getElementById('buy-email').addEventListener('keydown', e=>{ if(e.key==='Enter') goPay(); });
 </script>
+<script>(function(){try{new Image().src="https://propguard-server.onrender.com/px.gif?p="+encodeURIComponent(location.pathname)+"&r="+encodeURIComponent(document.referrer)+"&t="+Date.now();}catch(e){}})();</script>
 </body>
 </html>
